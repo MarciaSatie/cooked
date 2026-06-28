@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix cooked-app run dev",
+    "build": "npm --prefix cooked-app run build",
+    "lint": "npm --prefix cooked-app run lint",
+    "preview": "npm --prefix cooked-app run preview"
+  },
+  "dependencies": {}
+}
