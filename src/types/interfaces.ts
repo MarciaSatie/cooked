@@ -1,9 +1,32 @@
 // The root object returned by the API call
-export interface MealDBResponse {
+
+// List of Type Recipe
+export interface RecipesList {
   meals: Recipe[] | null;
 }
 
-// A single recipe object containing all its possible database properties
+// Type of Ingredient Array, that will be added to CleanRecipe
+export interface IngredientItem {
+    name: string;
+    measure: string;
+  }
+  
+// Type for Short Recipe object (this wil be used in the app)
+export interface CleanRecipe {
+    idMeal: string;
+    strMeal: string;
+    strCategory: string;
+    strArea: string;
+    strInstructions: string;
+    strMealThumb: string;
+    strTags: string | null;
+    strYoutube: string | null;
+    // Your new ingredient item objects array replaces fields 1-20!
+    ingredientsList: IngredientItem[]; 
+  }
+
+
+// A single recipe object (RAW info from API) containing all its possible database properties
 export interface Recipe {
   idMeal: string;
   strMeal: string;

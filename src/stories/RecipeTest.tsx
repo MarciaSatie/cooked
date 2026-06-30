@@ -1,15 +1,7 @@
-import { useEffect, useState } from 'react';
-import { getRecipes } from '../api/recipes-api';
+import { useRecipes } from '../hooks/useRecipes';
 
 export function RecipeTest() {
-  const [data, setData] = useState<string>('Loading...');
-
-  useEffect(() => {
-    getRecipes('52772')
-      .then(r => r.json())
-      .then(data => setData(JSON.stringify(data, null, 2)))
-      .catch(err => setData(`Error: ${err.message}`));
-  }, []);
+  const { recipes } = useRecipes('52772');
 
   return (
     <div style={{ padding: '20px' }}>
@@ -22,8 +14,9 @@ export function RecipeTest() {
         maxHeight: '600px',
         fontSize: '12px'
       }}>
-        {data}
+        {JSON.stringify(recipes, null, 2)}
       </pre>
     </div>
   );
 }
+
