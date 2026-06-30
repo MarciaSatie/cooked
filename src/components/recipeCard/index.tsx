@@ -26,7 +26,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       .filter(Boolean);//removes empty strings so only real steps remain.
 
   return (
-    <Card sx={{ maxWidth: 600, margin: '20px auto', borderRadius: 2, overflow: 'hidden' }}>
+    <Card sx={{ width: 450, margin: '20px auto', borderRadius: 2, overflow: 'hidden' }}>
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
@@ -107,12 +107,16 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             )}
             {/*Instructions Tab */}
             {tabValue === 1 && (
-                <Box component="ol" sx={{ pl: 2.5, mt: 0, mb: 0 }}>
+              <Box component="ol" sx={{ pl: 0, mt: 0, mb: 0, listStyle: 'none' }}>
                     {instructionSteps.map((step, index) => (
-                    <Box component="li" key={index} sx={{ mb: 1.5 }}>
-                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                        {step}
-                        </Typography>
+                  <Box component="li" key={index} sx={{ mb: 1.5, display: 'flex', gap: 1 }}>
+                    <Typography variant="body2" sx={{ minWidth: 32, fontWeight: 'bold' }}>
+                      {/* Converts 1, 2, 3 into 01, 02, 03 so the instruction list uses padded numbering */}
+                      {String(index + 1).padStart(2, '0')}.
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                      {step}
+                    </Typography>
                     </Box>
                     ))}
                 </Box>
