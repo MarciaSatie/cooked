@@ -1,18 +1,17 @@
 import { Card, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton } from '@mui/material';
-// 1. Import the Heart Icon from the icons package
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
 
-// Update your interface if you haven't already to include isFavorite
+
+// Local props type for the RecipeCard component.
+// The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
 type RecipeCardProps = {
-  recipe: CleanRecipe & { isFavorite?: boolean }; 
+  recipe: CleanRecipe;
 };
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Card sx={{ maxWidth: 600, margin: '20px auto', borderRadius: 2, overflow: 'hidden' }}>
-      
-      {/* 2. Wrap CardMedia in a Relative Box to position the heart icon on top of it */}
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
@@ -21,7 +20,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           alt={recipe.strMeal}
         />
         
-        {/* Heart Icon button (isFavorite)*/}
+        {/* Favorite toggle button shown on top of the recipe image */}
         <IconButton
           sx={{
             position: 'absolute',
@@ -34,7 +33,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           }}
           onClick={() => console.log('Heart clicked for recipe:', recipe.idMeal)}
         >
-          {/* 4. Dynamic Color logic: Red if true, grey if false */}
+          {/* Icon color reflects the current favorite state */}
           <FavoriteIcon 
             sx={{ 
               color: recipe.isFavorite ? '#e53935' : '#b0bec5' 
@@ -59,6 +58,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           Ingredients
         </Typography>
 
+        {/* Ingredient list is rendered from the cleaned ingredient array */}
         <Box component="ul" sx={{ pl: 2, mt: 0, mb: 2 }}>
           {recipe.ingredientsList.map((item, index) => (
             <Box component="li" key={index} sx={{ mb: 0.5 }}>
