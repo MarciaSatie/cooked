@@ -1,14 +1,15 @@
 // src/pages/Recipes.tsx
 import { Box, Typography, Card, CardContent } from '@mui/material';
+import { useRecipes } from '../hooks/useRecipes'; 
 
-// Dummy data for visualization
-const dummyRecipes = [
-  { id: 1, title: 'Classic Pancakes', time: '20 mins' },
-  { id: 2, title: 'Spaghetti Carbonara', time: '30 mins' },
-  { id: 3, title: 'Chocolate Chip Cookies', time: '25 mins' },
-];
+// 1. Fixed Interface naming convention
 
 export default function Home() {
+
+  // Call the hook and pass the recipe ID you want to fetch
+  const { recipes } = useRecipes('52772'); 
+  // Move loading and error conditions inside the component scope
+
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -25,12 +26,13 @@ export default function Home() {
           },
         }}
       >
-        {dummyRecipes.map((recipe) => (
-          <Box key={recipe.id}>
+        {recipes.map((recipe) => (
+          // Fixed matching properties with the API response template schema
+          <Box key={recipe.idMeal}>
             <Card>
               <CardContent>
-                <Typography variant="h6">{recipe.title}</Typography>
-                <Typography color="text.secondary">Prep time: {recipe.time}</Typography>
+                <Typography variant="h6">{recipe.strMeal}</Typography>
+                <Typography color="text.secondary">Category: {recipe.strCategory}</Typography>
               </CardContent>
             </Card>
           </Box>
