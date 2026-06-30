@@ -1,13 +1,14 @@
 // src/pages/Recipes.tsx
-import { Box, Typography, Card, CardContent } from '@mui/material';
-import { useRecipes } from '../hooks/useRecipes'; 
+import { Box, Typography } from '@mui/material';
+import { useRecipeByID } from '../hooks/useRecipes'; 
+import RecipeCard from '../components/recipeCard';
 
 // 1. Fixed Interface naming convention
 
 export default function Home() {
 
   // Call the hook and pass the recipe ID you want to fetch
-  const { recipes } = useRecipes('52772'); 
+  const { recipes } = useRecipeByID('52772'); 
   // Move loading and error conditions inside the component scope
 
   return (
@@ -28,14 +29,7 @@ export default function Home() {
       >
         {recipes.map((recipe) => (
           // Fixed matching properties with the API response template schema
-          <Box key={recipe.idMeal}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{recipe.strMeal}</Typography>
-                <Typography color="text.secondary">Category: {recipe.strCategory}</Typography>
-              </CardContent>
-            </Card>
-          </Box>
+          <RecipeCard recipe={recipe} />
         ))}
       </Box>
     </Box>

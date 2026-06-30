@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { RecipeTest } from './RecipeTest';
+import { RecipeTest } from './RecipeAPI-UseRecipeByID';
 
 const meta = {
   title: 'Testing/RecipeAPI',
@@ -12,4 +12,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  name: 'UseRecipeByID',
+};

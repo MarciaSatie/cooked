@@ -2,8 +2,15 @@ import { useEffect, useState } from "react";
 import { getRecipes } from "../api/recipes-api";
 import type { RecipesList, Recipe,CleanRecipe } from "../types/interfaces";
 
-export const useRecipes = (id: string) => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+/**
+ * Fetches recipe data for a given meal ID, converts each raw API recipe into
+ * the app's cleaned recipe shape, and returns the transformed list.
+ *
+ * @param id - The MealDB recipe ID to fetch.
+ * @returns An object containing the cleaned `recipes` array.
+ */
+export const useRecipeByID = (id: string) => {
+  const [recipes, setRecipes] = useState<CleanRecipe[]>([]);
 
   useEffect(() => {
     // 1. Create an inner async function so we can use "await"
@@ -17,7 +24,6 @@ export const useRecipes = (id: string) => {
 
         // 4. Update state with the meals array (or empty array if missing)
         if (data && data.meals) {
-          const ingredientObj = getIngredientList(data.meals[0]);
           const cleanData: CleanRecipe[] = data.meals.map((rawMeal) => ({
             idMeal: rawMeal.idMeal,
             strMeal: rawMeal.strMeal,
@@ -27,12 +33,12 @@ export const useRecipes = (id: string) => {
             strMealThumb: rawMeal.strMealThumb,
             strTags: rawMeal.strTags,
             strYoutube: rawMeal.strYoutube,
-            ingredientsList: ingredientObj,
+            ingredientsList: getIngredientList(rawMeal),
+            isFavorite:false,
           }));
         
 
           setRecipes(cleanData);
-          console.log(ingredientObj);
         } else {
           setRecipes([]);
         }

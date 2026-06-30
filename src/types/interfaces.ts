@@ -23,6 +23,7 @@ export interface CleanRecipe {
     strYoutube: string | null;
     // Your new ingredient item objects array replaces fields 1-20!
     ingredientsList: IngredientItem[]; 
+    isFavorite: boolean;
   }
 
 
