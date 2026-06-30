@@ -105,7 +105,11 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                     ))}
                 </Box>
             )}
-            {/*Instructions Tab */}
+            {/*Instructions Tab 
+            - Using Short-Circuit Evaluation. Instead of using CSS to hide elements, your approach completely creates (mounts) or destroys (unmounts) the elements in real-time.
+            - Shor-Circuit Evaluation: Basicaly if the left information is true JS will run whenever it is in the right side.
+            - With the || (OR) operator, short-circuit evaluation works exactly the opposite way of &&.
+            */}
             {tabValue === 1 && (
               <Box component="ol" sx={{ pl: 0, mt: 0, mb: 0, listStyle: 'none' }}>
                     {instructionSteps.map((step, index) => (
