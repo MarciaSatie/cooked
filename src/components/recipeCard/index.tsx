@@ -1,4 +1,5 @@
-import { Card, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
 
@@ -10,6 +11,20 @@ type RecipeCardProps = {
 };
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
+    const [tabValue, setTabValue] = useState<number>(0);
+
+    // 2. Event handler to update the state when a user clicks a different tab
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+      setTabValue(newValue);
+    };
+
+    // Break the strInstructions into smaller readable chunks.
+    const instructionSteps = recipe.strInstructions
+      .split(/\n+/)//breaks the instructions into chunks wherever there is one or more newline characters.
+      .flatMap((section) => section.split(/\.\s+/)) // breaks each chunk into smaller sentences using a period followed by spaces.
+      .map((step) => step.trim().replace(/\.$/, '')) // removes extra spaces and strips a trailing period from each step.
+      .filter(Boolean);//removes empty strings so only real steps remain.
+
   return (
     <Card sx={{ maxWidth: 600, margin: '20px auto', borderRadius: 2, overflow: 'hidden' }}>
       <Box sx={{ position: 'relative' }}>
@@ -58,15 +73,50 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           Ingredients
         </Typography>
 
-        {/* Ingredient list is rendered from the cleaned ingredient array */}
-        <Box component="ul" sx={{ pl: 2, mt: 0, mb: 2 }}>
-          {recipe.ingredientsList.map((item, index) => (
-            <Box component="li" key={index} sx={{ mb: 0.5 }}>
-              <Typography variant="body2">
-                <strong>{item.measure}</strong> {item.name}
-              </Typography>
-            </Box>
-          ))}
+        {/* Tabs switch between ingredients and instructions */}
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          variant="fullWidth"
+          sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+        >
+          <Tab label="Ingredients" />  {/* Index 0 */}
+          <Tab label="Instructions" />  {/* Index 1 */}
+        </Tabs>
+        <Box
+            sx={{ 
+                maxHeight: 250,       // 1. Sets the maximum height limit (in pixels) -- Tab Content Styles
+                overflowY: 'auto',    // 2. Adds a vertical scrollbar ONLY if content overflows
+                pr: 1,                // 3. Adds a tiny bit of right padding so text doesn't touch the scrollbar
+                // Optional: Smooth styling for the scrollbar on modern browsers
+                '&::-webkit-scrollbar': { width: '6px' },
+                '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' }
+            }}>
+            
+            {/*Ingredients Tab */}
+            {tabValue === 0 && (
+                <Box component="ul" sx={{ pl: 2, mt: 0, mb: 0 }}>
+                    {recipe.ingredientsList.map((item, index) => (
+                    <Box component="li" key={index} sx={{ mb: 0.5 }}>
+                        <Typography variant="body2">
+                        <strong>{item.measure}</strong> {item.name}
+                        </Typography>
+                    </Box>
+                    ))}
+                </Box>
+            )}
+            {/*Instructions Tab */}
+            {tabValue === 1 && (
+                <Box component="ol" sx={{ pl: 2.5, mt: 0, mb: 0 }}>
+                    {instructionSteps.map((step, index) => (
+                    <Box component="li" key={index} sx={{ mb: 1.5 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                        {step}
+                        </Typography>
+                    </Box>
+                    ))}
+                </Box>
+            )}
         </Box>
       </CardContent>
     </Card>
