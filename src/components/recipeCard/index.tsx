@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
 
@@ -8,10 +9,15 @@ import type { CleanRecipe } from '../../types/interfaces';
 // The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
 type RecipeCardProps = {
   recipe: CleanRecipe;
+  sx?: SxProps<Theme>;
 };
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
     const [tabValue, setTabValue] = useState<number>(0);
+    const cardSx: SxProps<Theme> = [
+      { width: 450, margin: '20px auto', borderRadius: 2, overflow: 'hidden' },
+      ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+    ];
 
     // 2. Event handler to update the state when a user clicks a different tab
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -26,7 +32,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       .filter(Boolean);//removes empty strings so only real steps remain.
 
   return (
-    <Card sx={{ width: 450, margin: '20px auto', borderRadius: 2, overflow: 'hidden' }}>
+    <Card sx={cardSx}>
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
