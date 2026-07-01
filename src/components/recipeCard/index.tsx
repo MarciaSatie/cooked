@@ -15,7 +15,7 @@ type RecipeCardProps = {
 export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
     const [tabValue, setTabValue] = useState<number>(0);
     const cardSx: SxProps<Theme> = [
-      { width: 450, margin: '20px auto', borderRadius: 2, overflow: 'hidden' },
+      { width: '100%', borderRadius: 2, overflow: 'hidden' },
       ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
     ];
 

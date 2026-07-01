@@ -38,26 +38,12 @@ export default function Home() {
           gridTemplateColumns: {
             xs: '1fr',
             sm: 'repeat(1, minmax(0, 1fr))',
-            md: 'repeat(3, minmax(0, 1fr))',
+            md: 'repeat(4, minmax(0, 1fr))',
           },
         }}
       >
-        {recipes.map((recipe, index) => (
-          <RecipeCard recipe={recipe}
-            sx={{
-              // Pulls the card 20px over the previous one
-              // Use marginTop for vertical stacks (xs/sm) and marginLeft for horizontal rows (md)
-              marginTop: { xs: index === 0 ? 0 : '-20px', md: 0 },
-              marginLeft: { md: index === 0 ? 0 : '-40px' },
-              
-              // Ensures later cards sit visually on top of older cards
-              zIndex: index, 
-              
-              // Adds Shadow for depth, to see the overlap clearly
-              boxShadow: 3, 
-              backgroundColor: 'background.paper',
-            }} 
-          />
+        {recipes.map((recipe) => (
+          <RecipeCard recipe={recipe}/>
         ))}
       </Box>
     </Box>

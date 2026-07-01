@@ -1,4 +1,4 @@
-
+import { Button} from '@mui/material';
 interface LetterProps {
   selectedLetter: string;
   onLetterSelect: (letter: string) => void;
@@ -16,7 +16,7 @@ export default function LettersBTN({ selectedLetter, onLetterSelect }: LetterPro
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px'}}>
       {letterList.map((letter) => (
-        <button 
+        <Button variant="text"
           key={letter} 
           onClick={() => onLetterSelect(letter)}
           style={{
@@ -27,7 +27,7 @@ export default function LettersBTN({ selectedLetter, onLetterSelect }: LetterPro
           }}
         >
           {letter}
-        </button>
+        </Button>
       ))}
     </div>
   );
