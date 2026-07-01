@@ -5,7 +5,7 @@ const meta = {
   title: 'Testing/RecipeAPI',
   component: RecipeTest,
   parameters: {
-    layout: 'centered',
+    layout: 'Top',
   },
 } satisfies Meta<typeof RecipeTest>;
 
