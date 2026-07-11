@@ -7,3 +7,7 @@ export const getRecipes = (id: string): Promise<Response> => {
 export const getRecipeListByFirstLetter = (letter:string): Promise<Response> =>{
     return fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
 };
+
+export const get1RandomRecipe = (): Promise<Response> =>{
+    return fetch(`https://www.themealdb.com/api/json/v1/1/random.php`);
+};

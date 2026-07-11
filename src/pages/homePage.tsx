@@ -1,11 +1,11 @@
 // src/pages/Recipes.tsx
 import { useState } from "react";
 import { Box, Typography, Divider } from '@mui/material';
-import { useRecipesByFirstLetter } from '../hooks/useRecipes'; 
+import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes'; 
 import RecipeCard from '../components/recipeCard';
 import LettersBTN from '../components/lettersBTN';
 
-// 1. Fixed Interface naming convention
+
 
 export default function Home() {
   const [chosenLetter, setchosenLetter] = useState("A");
@@ -13,9 +13,10 @@ export default function Home() {
     setchosenLetter(letter);
   };
 
+  const {recipes, isLoading, isError, error} = useQueryRecipesByFirstLetter(chosenLetter);
 
   // Call the hook and pass the recipe List By First Letter you want to fetch
-  const { recipes } = useRecipesByFirstLetter(chosenLetter);
+  //const { recipes } = useRecipesByFirstLetter(chosenLetter);
   // Move loading and error conditions inside the component scope
 
   return (
@@ -30,6 +31,9 @@ export default function Home() {
         onLetterSelect={handleChildSelection}
       />
       <Divider sx={{ my: 3 }} /> 
+
+      {isLoading && <Typography>Loading recipes...</Typography>}
+      {isError && <Typography color="error">{error instanceof Error ? error.message : 'Failed to load recipes.'}</Typography>}
 
       <Box
         sx={{

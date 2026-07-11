@@ -1,6 +1,86 @@
 import { useEffect, useState } from "react";
-import { getRecipes, getRecipeListByFirstLetter } from "../api/recipes-api";
+import { getRecipes, getRecipeListByFirstLetter,get1RandomRecipe } from "../api/recipes-api";
 import type { RecipesList, Recipe,CleanRecipe } from "../types/interfaces";
+import { useQuery } from '@tanstack/react-query';
+
+
+export const useQueryRecipesByFirstLetter = (letter: string) => {
+  // useQuery returns data, loading, and error states automatically
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // 1. The Query Key tracks the changing letter dependency
+    queryKey: ['recipes', letter], 
+    // 2. The Query Function executes the actual network request
+    queryFn: async () => {
+      const response = await getRecipeListByFirstLetter(letter);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+      return recipeFormatter(data);
+    },
+    // 3. Optimization: don't fetch if the letter is empty
+    enabled: !!letter, 
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+
+export const useQueryRecipeByID = (id:string)=>{
+  //get1RandomRecipe
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // 1. The Query Key tracks the changing letter dependency
+    queryKey: ['recipes',id], 
+    // 2. The Query Function executes the actual network request
+    queryFn: async () => {
+      const response = await getRecipes(id);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+      return recipeFormatter(data);
+    },
+    enabled: !!id, 
+  });
+  return { recipes, isLoading, isError, error };
+};
+
+export const useQuerySurpriseMe1= ()=>{
+  //get1RandomRecipe
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // 1. The Query Key tracks the changing letter dependency
+    queryKey: ['recipes'], 
+    // 2. The Query Function executes the actual network request
+    queryFn: async () => {
+      const response = await get1RandomRecipe();
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+      return recipeFormatter(data);
+    },
+
+  });
+  return { recipes, isLoading, isError, error };
+};
+const recipeFormatter = (data: RecipesList) => {
+  if (!data.meals) return [];
+
+  return data.meals.map((rawMeal) => ({
+    idMeal: rawMeal.idMeal,
+    strMeal: rawMeal.strMeal,
+    strCategory: rawMeal.strCategory,
+    strArea: rawMeal.strArea,
+    strInstructions: rawMeal.strInstructions,
+    strMealThumb: rawMeal.strMealThumb,
+    strTags: rawMeal.strTags,
+    strYoutube: rawMeal.strYoutube,
+    ingredientsList: getIngredientList(rawMeal),
+    isFavorite: false,
+  }));
+};
 
 /**
  * Fetches recipe data for a given meal ID, converts each raw API recipe into
@@ -24,18 +104,7 @@ export const useRecipeByID = (id: string) => {
 
         // 4. Update state with the meals array (or empty array if missing)
         if (data && data.meals) {
-          const cleanData: CleanRecipe[] = data.meals.map((rawMeal) => ({
-            idMeal: rawMeal.idMeal,
-            strMeal: rawMeal.strMeal,
-            strCategory: rawMeal.strCategory,
-            strArea: rawMeal.strArea,
-            strInstructions: rawMeal.strInstructions,
-            strMealThumb: rawMeal.strMealThumb,
-            strTags: rawMeal.strTags,
-            strYoutube: rawMeal.strYoutube,
-            ingredientsList: getIngredientList(rawMeal),
-            isFavorite:false,
-          }));
+          const cleanData: CleanRecipe[] = recipeFormatter(data);
         
 
           setRecipes(cleanData);
@@ -79,19 +148,7 @@ export const useRecipesByFirstLetter = (letter: string) => {
 
         // 4. Update state with the meals array (or empty array if missing)
         if (data && data.meals) {
-          const cleanData: CleanRecipe[] = data.meals.map((rawMeal) => ({
-            idMeal: rawMeal.idMeal,
-            strMeal: rawMeal.strMeal,
-            strCategory: rawMeal.strCategory,
-            strArea: rawMeal.strArea,
-            strInstructions: rawMeal.strInstructions,
-            strMealThumb: rawMeal.strMealThumb,
-            strTags: rawMeal.strTags,
-            strYoutube: rawMeal.strYoutube,
-            ingredientsList: getIngredientList(rawMeal),
-            isFavorite:false,
-          }));
-        
+          const cleanData: CleanRecipe[] = recipeFormatter(data);
 
           setRecipes(cleanData);
         } else {
