@@ -23,7 +23,7 @@ export default function SurpriseMe() {
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
         Need new ideas?{" "}
-        <Box component="span" sx={{ color: "primary.main" }}>
+        <Box component="span" sx={{ color: "primary.main",fontSize: "1.5rem" }}>
           check our 10 Random Recipes{" "}
         </Box>
       </Typography>
@@ -38,10 +38,19 @@ export default function SurpriseMe() {
         </Typography>
       )}
 
-      <h2> Need more inspiration?</h2>
+      <Typography sx={{
+        fontFamily: "'Playfair Display', 'serif'",
+        fontWeight: 400,
+        fontStyle: 'italic',
+        fontSize:"1.5rem",
+        letterSpacing: '0.5em',
+        lineHeight: 1.2,
+        color: 'text.primary',
+        mb: 4, 
+      }}> Need more inspiration?</Typography>
       <Button variant="outlined">
         <IconButton onClick={handleChangeRecipes} color="primary">
-          Try new Selection <RefreshIcon />
+          Try a new Selection <RefreshIcon />
         </IconButton>
       </Button>
       <Divider sx={{ my: 3 }} />

@@ -1,4 +1,4 @@
-import { Button} from '@mui/material';
+import { Button, Typography} from '@mui/material';
 interface LetterProps {
   selectedLetter: string;
   onLetterSelect: (letter: string) => void;
@@ -26,7 +26,9 @@ export default function LettersBTN({ selectedLetter, onLetterSelect }: LetterPro
             fontWeight: selectedLetter === letter ? '700' : '400',
           }}
         >
-          {letter}
+          <Typography sx={{ fontSize: "1.5rem" }}>
+            {letter}
+          </Typography>
         </Button>
       ))}
     </div>

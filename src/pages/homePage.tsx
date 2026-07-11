@@ -1,6 +1,6 @@
 // src/pages/Recipes.tsx
 import { useState } from "react";
-import { Box, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider,Pagination } from '@mui/material';
 import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes'; 
 import RecipeCard from '../components/recipeCard';
 import LettersBTN from '../components/lettersBTN';
@@ -28,6 +28,7 @@ export default function Home() {
       <Typography variant="h4" gutterBottom>
         Recipes A–Z 
       </Typography>
+
       {/* selectedLetter: Alphabetic char input.
           onLetterSelect: Callback function to send new letter input value up tot eh parent component.*/}
       <LettersBTN
@@ -39,6 +40,13 @@ export default function Home() {
       {isLoading && <Typography>Loading recipes...</Typography>}
       {isError && <Typography color="error">{error instanceof Error ? error.message : 'Failed to load recipes.'}</Typography>}
 
+      {/* Pagination Buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, width: '100%' }}>
+        <Pagination count={10} color="primary" />
+      </Box>
+      <br></br>
+
+      {/* Cards */}
       <Box
         sx={{
           display: 'grid',
