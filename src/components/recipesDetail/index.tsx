@@ -2,10 +2,10 @@ import React from 'react'
 
 
 
-function RecipedDetail() {
+function RecipesDetail() {
   return (
-    <div>RecipedDetail</div>
+    <div>RecipesDetail</div>
   )
 }
 
-export default RecipedDetail
+export default RecipesDetail

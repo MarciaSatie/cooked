@@ -3,7 +3,8 @@ import { Card,CardActionArea, CardContent, Typography, Box, Chip, Divider, CardM
 import type { SxProps, Theme } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
-
+import { useNavigate } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
 
 // Local props type for the RecipeCard component.
 // The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
@@ -13,6 +14,7 @@ type RecipeCardProps = {
 };
 
 export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
+    const navigate = useNavigate(); //Initialize the navigate function
     const [tabValue, setTabValue] = useState<number>(0);
     const cardSx: SxProps<Theme> = [
       { width: '100%', borderRadius: 2, overflow: 'hidden' },
@@ -34,15 +36,24 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
   return (
     <Card sx={cardSx}>
       <Box sx={{ position: 'relative' }}>
-        <CardActionArea onClick={() => console.log('Card clicked!')}>
-          <CardMedia
-            component="img"
-            height="250"
-            image={recipe.strMealThumb}
-            alt={recipe.strMeal}
-          />
-        </CardActionArea>
-          
+        <Tooltip title="Open recipe details" arrow>
+          <CardActionArea onClick={() => navigate(`/recipes/${recipe.idMeal}`)}
+              sx={{
+                '&:hover img': {
+                  opacity: 0.9,
+                  transform: 'scale(1.02)',
+                  transition: '0.2s ease',
+                },
+              }}
+            >
+            <CardMedia
+              component="img"
+              height="250"
+              image={recipe.strMealThumb}
+              alt={recipe.strMeal}
+            />
+          </CardActionArea>
+        </Tooltip>
         {/* Favorite toggle button shown on top of the recipe image */}
         <IconButton
           sx={{
