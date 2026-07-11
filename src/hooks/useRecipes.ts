@@ -67,7 +67,7 @@ export const useQuerySurpriseMe1= ()=>{
 };
 
 export const useQuerySurpriseMe10 = () => {
-  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+  const { data: recipes = [], isLoading, isError, error,refetch } = useQuery<CleanRecipe[]>({
     queryKey: ['recipes'], 
     queryFn: async () => {
       const dataList: CleanRecipe[] = [];
@@ -88,7 +88,7 @@ export const useQuerySurpriseMe10 = () => {
     }, 
   });
 
-  return { recipes, isLoading, isError, error };
+  return { recipes, isLoading, isError, error,refetch };
 };
 
 // #endregion

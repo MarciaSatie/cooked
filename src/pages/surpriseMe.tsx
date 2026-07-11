@@ -1,48 +1,64 @@
 // src/pages/Recipes.tsx
 
-import { Box, Typography, Divider } from '@mui/material';
-import { useQuerySurpriseMe10 } from '../hooks/useRecipes'; 
-import RecipeCard from '../components/recipeCard';
-import { IconButton } from '@mui/material';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { Box, Typography, Divider } from "@mui/material";
+import { useQuerySurpriseMe10 } from "../hooks/useRecipes";
+import RecipeCard from "../components/recipeCard";
+import { IconButton, Button } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import Spinner from "../components/spinner";
 
 export default function SurpriseMe() {
+  const { recipes, isLoading, isError, error,refetch } = useQuerySurpriseMe10();
 
+  const handleChangeRecipes = () => {
+    refetch(); 
+  };
 
-  const {recipes, isLoading, isError, error} = useQuerySurpriseMe10();
+  if (isLoading) {
+    return <Spinner />;
+  }
 
-  // Call the hook and pass the recipe List By First Letter you want to fetch
-  //const { recipes } = useRecipesByFirstLetter(chosenLetter);
-  // Move loading and error conditions inside the component scope
 
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Without any ideas what to cook, check our 10 Random Recipes 
+        Need new ideas?{" "}
+        <Box component="span" sx={{ color: "primary.main" }}>
+          check our 10 Random Recipes{" "}
+        </Box>
       </Typography>
 
-      <Divider sx={{ my: 3 }} /> 
+      <Divider sx={{ my: 3 }} />
+
 
       {isLoading && <Typography>Loading recipes...</Typography>}
-      {isError && <Typography color="error">{error instanceof Error ? error.message : 'Failed to load recipes.'}</Typography>}
+      {isError && (
+        <Typography color="error">
+          {error instanceof Error ? error.message : "Failed to load recipes."}
+        </Typography>
+      )}
 
-      <IconButton onClick={() => window.location.reload()} color="primary">
-        <RefreshIcon />
-      </IconButton>
+      <h2> Need more inspiration?</h2>
+      <Button variant="outlined">
+        <IconButton onClick={handleChangeRecipes} color="primary">
+          Try new Selection <RefreshIcon />
+        </IconButton>
+      </Button>
+      <Divider sx={{ my: 3 }} />
 
       <Box
         sx={{
-          display: 'grid',
+          display: "grid",
           gap: 3,
           gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(1, minmax(0, 1fr))',
-            md: 'repeat(4, minmax(0, 1fr))',
+            xs: "1fr",
+            sm: "repeat(1, minmax(0, 1fr))",
+            md: "repeat(5, minmax(0, 1fr))",
           },
         }}
       >
         {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe}/>
+          <RecipeCard recipe={recipe} />
         ))}
       </Box>
     </Box>

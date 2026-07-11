@@ -4,7 +4,7 @@ import { Box, Typography, Divider } from '@mui/material';
 import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes'; 
 import RecipeCard from '../components/recipeCard';
 import LettersBTN from '../components/lettersBTN';
-
+import Spinner from "../components/spinner";
 
 
 export default function Home() {
@@ -14,6 +14,10 @@ export default function Home() {
   };
 
   const {recipes, isLoading, isError, error} = useQueryRecipesByFirstLetter(chosenLetter);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   // Call the hook and pass the recipe List By First Letter you want to fetch
   //const { recipes } = useRecipesByFirstLetter(chosenLetter);
@@ -42,12 +46,15 @@ export default function Home() {
           gridTemplateColumns: {
             xs: '1fr',
             sm: 'repeat(1, minmax(0, 1fr))',
-            md: 'repeat(4, minmax(0, 1fr))',
+            md: 'repeat(5, minmax(0, 1fr))',
           },
         }}
       >
         {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe}/>
+          <div>
+              <RecipeCard recipe={recipe}/>
+
+          </div>
         ))}
       </Box>
     </Box>

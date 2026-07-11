@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
+import { Card,CardActionArea, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
@@ -34,13 +34,15 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
   return (
     <Card sx={cardSx}>
       <Box sx={{ position: 'relative' }}>
-        <CardMedia
-          component="img"
-          height="250"
-          image={recipe.strMealThumb}
-          alt={recipe.strMeal}
-        />
-        
+        <CardActionArea onClick={() => console.log('Card clicked!')}>
+          <CardMedia
+            component="img"
+            height="250"
+            image={recipe.strMealThumb}
+            alt={recipe.strMeal}
+          />
+        </CardActionArea>
+          
         {/* Favorite toggle button shown on top of the recipe image */}
         <IconButton
           sx={{
