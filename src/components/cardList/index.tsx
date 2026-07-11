@@ -40,6 +40,7 @@ export default function CardList({ recipes }: CardListProps) {
           page={page}
           onChange={handleRecipesPerPage}
           color="primary"
+          sx={{ mb: 3 }}
         />
       </Box>
 
