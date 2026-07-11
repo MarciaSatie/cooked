@@ -9,8 +9,13 @@ import Spinner from "../components/spinner";
 
 export default function Home() {
   const [chosenLetter, setchosenLetter] = useState("A");
+  const [page, setPage] = useState(1);
+
+  const RECIPES_PER_PAGE = 5;
+
   const handleChildSelection = (letter: string) => {
     setchosenLetter(letter);
+    setPage(1);
   };
 
   const {recipes, isLoading, isError, error} = useQueryRecipesByFirstLetter(chosenLetter);
@@ -18,6 +23,27 @@ export default function Home() {
   if (isLoading) {
     return <Spinner />;
   }
+
+  const totalRecipes = recipes.length;
+
+  /*
+    Return an Array with Sliced Recipe list based on Page Number 
+  */
+  const recipesListPerPage = (page: number) => {
+    const startIndex = (page - 1) * RECIPES_PER_PAGE; 
+    const endIndex = page * RECIPES_PER_PAGE;
+  
+    return recipes.slice(startIndex, endIndex);
+  };
+
+  const recipesPerPage = recipesListPerPage(page);
+
+  const totalPages = Math.ceil(totalRecipes / RECIPES_PER_PAGE); // round up the result 
+
+  const handleRecipesPerPage = (_event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPage(newPage);
+  };
+
 
   // Call the hook and pass the recipe List By First Letter you want to fetch
   //const { recipes } = useRecipesByFirstLetter(chosenLetter);
@@ -37,12 +63,27 @@ export default function Home() {
       />
       <Divider sx={{ my: 3 }} /> 
 
-      {isLoading && <Typography>Loading recipes...</Typography>}
       {isError && <Typography color="error">{error instanceof Error ? error.message : 'Failed to load recipes.'}</Typography>}
+
+      <Typography sx={{
+        fontFamily: "'Playfair Display', 'serif'",
+        fontWeight: 400,
+        fontStyle: 'italic',
+        fontSize:"1.5rem",
+        letterSpacing: '0.5em',
+        lineHeight: 1.2,
+        color: 'text.primary',
+        mb: 4, 
+      }}> Recipes Starting with {chosenLetter}</Typography>
+      <p>Total Recipes: {totalRecipes}</p>
 
       {/* Pagination Buttons */}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, width: '100%' }}>
-        <Pagination count={10} color="primary" />
+        <Pagination count={Math.max(totalPages, 1)}  // returns the bigger value between totalPages and 1
+        page={page}
+        onChange={handleRecipesPerPage}
+        color="primary" 
+        />
       </Box>
       <br></br>
 
@@ -58,10 +99,9 @@ export default function Home() {
           },
         }}
       >
-        {recipes.map((recipe) => (
-          <div>
+        {recipesPerPage.map((recipe) => (
+          <div key={recipe.idMeal}>
               <RecipeCard recipe={recipe}/>
-
           </div>
         ))}
       </Box>
