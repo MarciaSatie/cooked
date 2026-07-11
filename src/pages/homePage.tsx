@@ -1,21 +1,17 @@
 // src/pages/Recipes.tsx
 import { useState } from "react";
-import { Box, Typography, Divider,Pagination } from '@mui/material';
+import { Box, Typography, Divider} from '@mui/material';
 import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes'; 
-import RecipeCard from '../components/recipeCard';
+
 import LettersBTN from '../components/lettersBTN';
 import Spinner from "../components/spinner";
 import CardList from "../components/cardList"
 
 export default function Home() {
   const [chosenLetter, setchosenLetter] = useState("A");
-  const [page, setPage] = useState(1);
-
-  const RECIPES_PER_PAGE = 5;
 
   const handleChildSelection = (letter: string) => {
     setchosenLetter(letter);
-    setPage(1);
   };
 
   const {recipes, isLoading, isError, error} = useQueryRecipesByFirstLetter(chosenLetter);
@@ -25,25 +21,6 @@ export default function Home() {
   }
 
   const totalRecipes = recipes.length;
-
-  /*
-    Return an Array with Sliced Recipe list based on Page Number 
-  */
-  const recipesListPerPage = (page: number) => {
-    const startIndex = (page - 1) * RECIPES_PER_PAGE; 
-    const endIndex = page * RECIPES_PER_PAGE;
-  
-    return recipes.slice(startIndex, endIndex);
-  };
-
-  const recipesPerPage = recipesListPerPage(page);
-
-  const totalPages = Math.ceil(totalRecipes / RECIPES_PER_PAGE); // round up the result 
-
-  const handleRecipesPerPage = (_event: React.ChangeEvent<unknown>, newPage: number) => {
-    setPage(newPage);
-  };
-
 
   // Call the hook and pass the recipe List By First Letter you want to fetch
   //const { recipes } = useRecipesByFirstLetter(chosenLetter);
@@ -77,6 +54,7 @@ export default function Home() {
       }}> Recipes Starting with {chosenLetter}</Typography>
       <p>Total Recipes: {totalRecipes}</p>
 
+      {/* Card List Component*/}
       <CardList recipes={recipes} />
     </Box>
   );
