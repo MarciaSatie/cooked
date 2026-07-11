@@ -5,7 +5,7 @@ import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes';
 import RecipeCard from '../components/recipeCard';
 import LettersBTN from '../components/lettersBTN';
 import Spinner from "../components/spinner";
-
+import CardList from "../components/cardList"
 
 export default function Home() {
   const [chosenLetter, setchosenLetter] = useState("A");
@@ -77,34 +77,7 @@ export default function Home() {
       }}> Recipes Starting with {chosenLetter}</Typography>
       <p>Total Recipes: {totalRecipes}</p>
 
-      {/* Pagination Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, width: '100%' }}>
-        <Pagination count={Math.max(totalPages, 1)}  // returns the bigger value between totalPages and 1
-        page={page}
-        onChange={handleRecipesPerPage}
-        color="primary" 
-        />
-      </Box>
-      <br></br>
-
-      {/* Cards */}
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 3,
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(1, minmax(0, 1fr))',
-            md: 'repeat(5, minmax(0, 1fr))',
-          },
-        }}
-      >
-        {recipesPerPage.map((recipe) => (
-          <div key={recipe.idMeal}>
-              <RecipeCard recipe={recipe}/>
-          </div>
-        ))}
-      </Box>
+      <CardList recipes={recipes} />
     </Box>
   );
 }
