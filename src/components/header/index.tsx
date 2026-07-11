@@ -18,7 +18,10 @@ export default function Header({ title }: HeaderProps) {
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button color="inherit" component={RouterLink} to="/">
-          Recipes A–Z 
+            Recipes A–Z 
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/surpriseMe">
+            Surprise ME!
           </Button>
           <Button color="inherit" component={RouterLink} to="/favorites">
             Favorites

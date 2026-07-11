@@ -3,7 +3,7 @@ import { getRecipes, getRecipeListByFirstLetter,get1RandomRecipe } from "../api/
 import type { RecipesList, Recipe,CleanRecipe } from "../types/interfaces";
 import { useQuery } from '@tanstack/react-query';
 
-
+// #region Use Queries 
 export const useQueryRecipesByFirstLetter = (letter: string) => {
   // useQuery returns data, loading, and error states automatically
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
@@ -65,22 +65,34 @@ export const useQuerySurpriseMe1= ()=>{
   });
   return { recipes, isLoading, isError, error };
 };
-const recipeFormatter = (data: RecipesList) => {
-  if (!data.meals) return [];
 
-  return data.meals.map((rawMeal) => ({
-    idMeal: rawMeal.idMeal,
-    strMeal: rawMeal.strMeal,
-    strCategory: rawMeal.strCategory,
-    strArea: rawMeal.strArea,
-    strInstructions: rawMeal.strInstructions,
-    strMealThumb: rawMeal.strMealThumb,
-    strTags: rawMeal.strTags,
-    strYoutube: rawMeal.strYoutube,
-    ingredientsList: getIngredientList(rawMeal),
-    isFavorite: false,
-  }));
+export const useQuerySurpriseMe10 = () => {
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    queryKey: ['recipes'], 
+    queryFn: async () => {
+      const dataList: CleanRecipe[] = [];
+
+      for (let i = 0; i < 10; i++) {
+        const response = await get1RandomRecipe();
+        const data: RecipesList = await response.json();
+
+        if (!data.meals) {
+          continue; 
+        }
+
+        // Destructure the formatted array into dataList (to avoid nestead arrays)
+        dataList.push(...recipeFormatter(data)); 
+      }
+
+      return dataList;
+    }, 
+  });
+
+  return { recipes, isLoading, isError, error };
 };
+
+// #endregion
+// #region Use Effect API 
 
 /**
  * Fetches recipe data for a given meal ID, converts each raw API recipe into
@@ -169,6 +181,24 @@ export const useRecipesByFirstLetter = (letter: string) => {
   return { recipes };
 };
 
+// #endregion
+// #region HELPERS 
+const recipeFormatter = (data: RecipesList) => {
+  if (!data.meals) return [];
+
+  return data.meals.map((rawMeal) => ({
+    idMeal: rawMeal.idMeal,
+    strMeal: rawMeal.strMeal,
+    strCategory: rawMeal.strCategory,
+    strArea: rawMeal.strArea,
+    strInstructions: rawMeal.strInstructions,
+    strMealThumb: rawMeal.strMealThumb,
+    strTags: rawMeal.strTags,
+    strYoutube: rawMeal.strYoutube,
+    ingredientsList: getIngredientList(rawMeal),
+    isFavorite: false,
+  }));
+};
 
 type Ingredient = {
   name: string;
@@ -193,3 +223,5 @@ const getIngredientList = (recipe: Recipe): Ingredient[] => {
   return list;
 };
 
+
+// #endregion
