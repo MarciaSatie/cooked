@@ -1,32 +1,33 @@
 
-import { useQueryRecipeByID } from '../../hooks/useRecipes'; 
-import Spinner from "../../components/spinner";
-import { Typography,Box,Chip, Divider, CardMedia, Card} from '@mui/material';
+
+
+import type { CleanRecipe } from '../../types/interfaces';
+import { Typography,Box,Chip, Divider, CardMedia, Card } from '@mui/material';
 import PlaylistAddCheckCircleTwoToneIcon from '@mui/icons-material/PlaylistAddCheckCircleTwoTone';
 import ExpandableSection from "../expandableSection";
 import * as utils from '../../utils/utils';
 import bgImage from "../../assets/backgorund_img.png";
 import myLogo from '../../assets/cook-hat.png';
+import FavoriteToggle from '../cardIcons/favoriteToggle';
 
-type RecipesDetailProps = { id?: string };
-export default function RecipesDetail({ id }: RecipesDetailProps){
 
-  
-  const {recipe, isLoading, isError, error} = useQueryRecipeByID(id!);
-  if (!recipe) return <div>No recipe found</div>;
-  if (isLoading) {return <Spinner />;}
-  if (isError) {return <h1>{(error as Error).message}</h1>;}
+type RecipesDetailProps = { recipe: CleanRecipe };
+export default function RecipesDetail({ recipe }: RecipesDetailProps){
 
   // Break the strInstructions into smaller readable chunks.
   const instructionSteps = utils.recipeInstructionsFormatter(recipe);
 
   return (
     <Box>
-      {/* Recipe Title */}
-      <Typography color="primary" variant="h4" component="h1" gutterBottom>
-      <Box component="img" src={myLogo} alt="Logo" sx={{ width: 50, height: 50, marginRight: 2 }} />
-        {recipe.strMeal}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+        {/* Recipe Title */}
+        <Typography color="primary" variant="h4" component="h1" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box component="img" src={myLogo} alt="Logo" sx={{ width: 50, height: 50, marginRight: 2 }} />
+          {recipe.strMeal}
+        </Typography>
+
+        <FavoriteToggle recipe={recipe} />
+      </Box>
 
       {/* Recipe Image */}
       <Box   sx={{

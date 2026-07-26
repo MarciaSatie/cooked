@@ -1,12 +1,11 @@
-import { useContext, useState } from 'react';
-import { Card,CardActionArea, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
+import { useState } from 'react';
+import { Card,CardActionArea, CardContent, Typography, Box, Chip, Divider, CardMedia, Tabs, Tab } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
 import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import * as utils from '../../utils/utils' 
-import { RecipesContext } from '../../contexts/recipesContext';
+import FavoriteToggle from '../cardIcons/favoriteToggle';
 
 // Local props type for the RecipeCard component.
 // The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
@@ -16,11 +15,9 @@ type RecipeCardProps = {
 };
 
 export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
-    const navigate = useNavigate(); //Initialize the navigate function
-  const { favourites, addToFavourites, removeFromFavourites } = useContext(RecipesContext);
-  const isFavourite = favourites.includes(recipe.idMeal);
-    const [tabValue, setTabValue] = useState<number>(0);
-    const cardSx: SxProps<Theme> = [
+  const navigate = useNavigate(); //Initialize the navigate function
+  const [tabValue, setTabValue] = useState<number>(0);
+  const cardSx: SxProps<Theme> = [
       { width: '100%', borderRadius: 2, overflow: 'hidden' },
       ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
     ];
@@ -55,36 +52,14 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
             />
           </CardActionArea>
         </Tooltip>
-        {/* Favorite toggle button shown on top of the recipe image */}
-        <IconButton
+        <FavoriteToggle
+          recipe={recipe}
           sx={{
             position: 'absolute',
             top: 12,
             right: 12,
-            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white background
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)', // Brighten on hover
-            },
           }}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (isFavourite) {
-              removeFromFavourites(recipe);
-              return;
-            }
-
-            addToFavourites(recipe);
-          }}
-        >
-          {/* Icon color reflects the current favorite state */}
-          <FavoriteIcon 
-            sx={{ 
-              color: isFavourite ? '#e53935' : '#b0bec5' 
-            }} 
-          />
-        </IconButton>
+        />
       </Box>
 
       <CardContent>
