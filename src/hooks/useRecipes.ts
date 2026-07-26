@@ -4,6 +4,12 @@ import type { RecipesList, Recipe,CleanRecipe } from "../types/interfaces";
 import { useQuery } from '@tanstack/react-query';
 
 // #region Use Queries 
+/**
+ * Fetches recipes that start with a given first letter using React Query.
+ *
+ * @param letter - The first letter used to filter recipes.
+ * @returns The loaded recipes plus loading and error state.
+ */
 export const useQueryRecipesByFirstLetter = (letter: string) => {
   // useQuery returns data, loading, and error states automatically
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
@@ -26,6 +32,12 @@ export const useQueryRecipesByFirstLetter = (letter: string) => {
   return { recipes, isLoading, isError, error };
 };
 
+/**
+ * Fetches recipes for a specific MealDB recipe ID using React Query.
+ *
+ * @param id - The MealDB recipe ID.
+ * @returns The loaded recipes plus loading and error state.
+ */
 export const useQueryRecipeByID = (id:string)=>{
   //get1RandomRecipe
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
@@ -42,16 +54,19 @@ export const useQueryRecipeByID = (id:string)=>{
       return recipeFormatter(data);
     },
     enabled: !!id, 
+      /**
+       * Fetches one random recipe using React Query.
+       *
+       * @returns One random recipe plus loading and error state.
+       */
   });
-  return { recipes, isLoading, isError, error };
+  const recipe = recipes[0];
+  return { recipe, isLoading, isError, error };
 };
 
-export const useQuerySurpriseMe1= ()=>{
-  //get1RandomRecipe
+export const useQuerySurpriseMe1 = () => {
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
-    // 1. The Query Key tracks the changing letter dependency
-    queryKey: ['recipes'], 
-    // 2. The Query Function executes the actual network request
+    queryKey: ['surprise-me', 1],
     queryFn: async () => {
       const response = await get1RandomRecipe();
       const data: RecipesList = await response.json();
@@ -59,44 +74,57 @@ export const useQuerySurpriseMe1= ()=>{
       if (!data.meals) {
         return [];
       }
+
       return recipeFormatter(data);
     },
-
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
+
   return { recipes, isLoading, isError, error };
 };
 
+/**
+ * Fetches ten random recipes in parallel using React Query.
+ *
+ * @returns Ten random recipes plus loading, error, and refetch state.
+ */
 export const useQuerySurpriseMe10 = () => {
-  const { data: recipes = [], isLoading, isError, error,refetch } = useQuery<CleanRecipe[]>({
-    queryKey: ['recipes'], 
+  // useQuery manages the API request state for us and gives back the loaded recipes plus status flags.
+  const { data: recipes = [], isLoading, isError, error, refetch } = useQuery<CleanRecipe[]>({
+    // This key uniquely identifies this query in React Query's cache.
+    queryKey: ['surprise-me', 10],
+    // This function runs when React Query needs to fetch 10 random recipes.
     queryFn: async () => {
-      const dataList: CleanRecipe[] = [];
+      // Start 10 random API requests at the same time instead of waiting for each one in order.
+      const responses = await Promise.all(
+        Array.from({ length: 10 }, () => get1RandomRecipe())
+      );
 
-      for (let i = 0; i < 10; i++) {
-        const response = await get1RandomRecipe();
-        const data: RecipesList = await response.json();
+      // Turn each HTTP response into JSON so we can read the recipe data.
+      const payloads = await Promise.all(
+        responses.map(async (response) => response.json() as Promise<RecipesList>)
+      );
 
-        if (!data.meals) {
-          continue; 
-        }
-
-        // Destructure the formatted array into dataList (to avoid nestead arrays)
-        dataList.push(...recipeFormatter(data)); 
-      }
-
-      return dataList;
-    }, 
+      //flatMap: worlk slike Map, but also "flatten" teh array creating just 1 level array (avoiding nesting)
+      //https://saynaesmailzadeh.medium.com/exploring-the-depths-of-map-vs-flatmap-in-javascript-react-js-and-typescript-f6c97c34fb62
+      return payloads.flatMap((data) => recipeFormatter(data));
+    },
+    // Keep the data fresh for 30 minutes so React Query does not refetch too often.
+    staleTime: 30 * 60 * 1000,
+    // Do not refetch automatically when the user switches back to this tab/window.
+    refetchOnWindowFocus: false,
   });
 
-  return { recipes, isLoading, isError, error,refetch };
+  // Return the recipes and the query state so the page can render loading and error states.
+  return { recipes, isLoading, isError, error, refetch };
 };
 
 // #endregion
 // #region Use Effect API 
 
 /**
- * Fetches recipe data for a given meal ID, converts each raw API recipe into
- * the app's cleaned recipe shape, and returns the transformed list.
+ * Fetches recipe data for a given meal ID with useEffect and local state.
  *
  * @param id - The MealDB recipe ID to fetch.
  * @returns An object containing the cleaned `recipes` array.
@@ -139,10 +167,9 @@ export const useRecipeByID = (id: string) => {
 };
 
 /**
- * Fetches List of recipes data for First Letter, converts each raw API recipe into
- * the app's cleaned recipe shape, and returns the transformed list.
+ * Fetches recipes for a given first letter with useEffect and local state.
  *
- * @param letter - Alphabetic Letter to fetch.
+ * @param letter - The letter used to filter recipes.
  * @returns An object containing the cleaned `recipes` array.
  */
 export const useRecipesByFirstLetter = (letter: string) => {
@@ -183,6 +210,12 @@ export const useRecipesByFirstLetter = (letter: string) => {
 
 // #endregion
 // #region HELPERS 
+/**
+ * Converts a MealDB payload into the app's cleaned recipe shape.
+ *
+ * @param data - Raw MealDB recipe response data.
+ * @returns An array of cleaned recipes.
+ */
 const recipeFormatter = (data: RecipesList) => {
   if (!data.meals) return [];
 
@@ -205,6 +238,12 @@ type Ingredient = {
   measure: string;
 };
 
+/**
+ * Collects the non-empty ingredient and measure pairs from a raw recipe.
+ *
+ * @param recipe - A raw MealDB recipe.
+ * @returns The parsed ingredient list.
+ */
 const getIngredientList = (recipe: Recipe): Ingredient[] => {
   const list: Ingredient[] = [];
 

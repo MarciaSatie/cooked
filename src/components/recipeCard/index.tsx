@@ -5,6 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import type { CleanRecipe } from '../../types/interfaces';
 import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
+import * as utils from '../../utils/utils' 
 
 // Local props type for the RecipeCard component.
 // The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
@@ -27,11 +28,7 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
     };
 
     // Break the strInstructions into smaller readable chunks.
-    const instructionSteps = recipe.strInstructions
-      .split(/\n+/)//breaks the instructions into chunks wherever there is one or more newline characters.
-      .flatMap((section) => section.split(/\.\s+/)) // breaks each chunk into smaller sentences using a period followed by spaces.
-      .map((step) => step.trim().replace(/\.$/, '')) // removes extra spaces and strips a trailing period from each step.
-      .filter(Boolean);//removes empty strings so only real steps remain.
+    const instructionSteps = utils.recipeInstructionsFormatter(recipe);
 
   return (
     <Card sx={cardSx}>

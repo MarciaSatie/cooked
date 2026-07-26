@@ -13,7 +13,7 @@ export function RecipeTest() {
     setID(event.target.value); 
   };
 
-  const { recipes, isLoading, isError, error } = useQueryRecipeByID(id);
+  const { recipe, isLoading, isError, error } = useQueryRecipeByID(id);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -48,7 +48,7 @@ export function RecipeTest() {
           fontSize: '12px',
         }}
       >
-        {JSON.stringify(recipes, null, 2)}
+        {recipe ? JSON.stringify(recipe, null, 2) : 'No recipe found'}
       </pre>
     </div>
   );

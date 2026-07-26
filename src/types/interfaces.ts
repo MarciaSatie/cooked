@@ -21,7 +21,7 @@ export interface CleanRecipe {
     strMealThumb: string;
     strTags: string | null;
     strYoutube: string | null;
-    // Your new ingredient item objects array replaces fields 1-20!
+    // New ingredient item objects array replaces fields 1-20!
     ingredientsList: IngredientItem[]; 
     isFavorite: boolean;
   }
