@@ -17,6 +17,7 @@ export interface CleanRecipe {
     strMeal: string;
     strCategory: string;
     strArea: string;
+    strCountry: string;
     strInstructions: string;
     strMealThumb: string;
     strTags: string | null;

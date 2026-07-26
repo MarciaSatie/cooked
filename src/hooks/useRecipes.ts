@@ -224,6 +224,7 @@ const recipeFormatter = (data: RecipesList) => {
     strMeal: rawMeal.strMeal,
     strCategory: rawMeal.strCategory,
     strArea: rawMeal.strArea,
+    strCountry: rawMeal.strCountry,
     strInstructions: rawMeal.strInstructions,
     strMealThumb: rawMeal.strMealThumb,
     strTags: rawMeal.strTags,

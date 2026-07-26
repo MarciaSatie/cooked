@@ -19,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
           <Header title='Welcome to Cooked' />
@@ -31,6 +32,8 @@ createRoot(document.getElementById('root')!).render(
           <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
       </BrowserRouter>
+
+
     </ThemeProvider>
   </StrictMode>,
 )
