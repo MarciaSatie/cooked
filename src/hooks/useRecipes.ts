@@ -54,16 +54,16 @@ export const useQueryRecipeByID = (id:string)=>{
       return recipeFormatter(data);
     },
     enabled: !!id, 
-      /**
-       * Fetches one random recipe using React Query.
-       *
-       * @returns One random recipe plus loading and error state.
-       */
   });
   const recipe = recipes[0];
   return { recipe, isLoading, isError, error };
 };
 
+/**
+ * Fetches one random recipe using React Query.
+ *
+ * @returns One random recipe plus loading and error state.
+ */
 export const useQuerySurpriseMe1 = () => {
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
     queryKey: ['surprise-me', 1],
@@ -216,7 +216,7 @@ export const useRecipesByFirstLetter = (letter: string) => {
  * @param data - Raw MealDB recipe response data.
  * @returns An array of cleaned recipes.
  */
-const recipeFormatter = (data: RecipesList) => {
+const recipeFormatter = (data: RecipesList): CleanRecipe[] => {
   if (!data.meals) return [];
 
   return data.meals.map((rawMeal) => ({
@@ -224,7 +224,7 @@ const recipeFormatter = (data: RecipesList) => {
     strMeal: rawMeal.strMeal,
     strCategory: rawMeal.strCategory,
     strArea: rawMeal.strArea,
-    strCountry: rawMeal.strCountry,
+    strCountry: rawMeal.strCountry ?? "",
     strInstructions: rawMeal.strInstructions,
     strMealThumb: rawMeal.strMealThumb,
     strTags: rawMeal.strTags,
