@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
-import { getRecipes, getRecipeListByFirstLetter,get1RandomRecipe } from "../api/recipes-api";
-import type { RecipesList, Recipe,CleanRecipe } from "../types/interfaces";
+import { 
+  getRecipes, 
+  getRecipeListByFirstLetter,
+  get1RandomRecipe,
+  getCategoriesList,
+  getRecipesPerCategory,
+  filterByMainIngredient,
+  filterByIngredient,
+  filterByArea
+} from "../api/recipes-api";
+import type { RecipesList, Recipe, CleanRecipe, Category } from "../types/interfaces";
 import { useQuery } from '@tanstack/react-query';
 
 // #region Use Queries 
@@ -39,7 +48,6 @@ export const useQueryRecipesByFirstLetter = (letter: string) => {
  * @returns The loaded recipes plus loading and error state.
  */
 export const useQueryRecipeByID = (id:string)=>{
-  //get1RandomRecipe
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
     // 1. The Query Key tracks the changing letter dependency
     queryKey: ['recipes',id], 
@@ -66,7 +74,7 @@ export const useQueryRecipeByID = (id:string)=>{
  */
 export const useQuerySurpriseMe1 = () => {
   const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
-    queryKey: ['surprise-me', 1],
+    queryKey: ['surprise-me1', 1],
     queryFn: async () => {
       const response = await get1RandomRecipe();
       const data: RecipesList = await response.json();
@@ -119,6 +127,144 @@ export const useQuerySurpriseMe10 = () => {
   // Return the recipes and the query state so the page can render loading and error states.
   return { recipes, isLoading, isError, error, refetch };
 };
+
+export const useQueryCategoriesList = () => {
+  const { data: categories = [], isLoading, isError, error } = useQuery<Category[]>({
+    queryKey: ['category', 1],
+    queryFn: async () => {
+      const response = await getCategoriesList();
+      const data: { categories: Category[] } = await response.json();
+
+      if (!data.categories) {
+        return [];
+      }
+
+      return data.categories;
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  return { categories, isLoading, isError, error };
+};
+
+/**
+ * Fetches recipes for a given category using React Query.
+ *
+ * @param category - The MealDB category used to filter recipes.
+ * @returns The loaded recipes plus loading and error state.
+ */
+export const useQueryRecipesPerCategory = (category: string) => {
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // Include the category in the key so React Query caches each category as a separate result.
+    /*So if the category changes from Pasta to Chicken, it does not reuse the old data. 
+     * It stores and fetches them separately, which prevents showing the wrong recipes for the wrong category.
+     */
+    queryKey: ['recipes', 'category', category],
+    queryFn: async () => {
+      const response = await getRecipesPerCategory(category);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      return recipeFormatter(data);
+    },
+    enabled: !!category,
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+
+/**
+ * Fetches recipes for a given main ingredient using React Query.
+ *
+ * @param ingredient - The MealDB ingredient used to filter recipes.
+ * @returns The loaded recipes plus loading and error state.
+ */
+export const useQueryRecipesByMainIngredient = (ingredient: string) => {
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // Include the category in the key so React Query caches each ingredient as a separate result.
+    /*So if the category changes from Pasta to Chicken, it does not reuse the old data. 
+     * It stores and fetches them separately, which prevents showing the wrong recipes for the wrong category.
+     */
+    queryKey: ['recipes', 'main-ingredient', ingredient],
+    queryFn: async () => {
+      const response = await filterByMainIngredient(ingredient);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      return recipeFormatter(data);
+    },
+    enabled: !!ingredient,
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+
+/**
+ * Fetches recipes for a given ingredient using React Query.
+ *
+ * @param ingredient - The MealDB ingredient used to filter recipes.
+ * @returns The loaded recipes plus loading and error state.
+ */
+export const useQueryRecipesByIngredient = (ingredient: string) => {
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // Include the category in the key so React Query caches each ingredient as a separate result.
+    /*So if the category changes from Pasta to Chicken, it does not reuse the old data. 
+     * It stores and fetches them separately, which prevents showing the wrong recipes for the wrong category.
+     */
+    queryKey: ['recipes', 'ingredient', ingredient],
+    queryFn: async () => {
+      const response = await filterByIngredient(ingredient);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      return recipeFormatter(data);
+    },
+    enabled: !!ingredient,
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+
+/**
+ * Fetches recipes for a given area using React Query.
+ *
+ * @param area - The MealDB area used to filter recipes.
+ * @returns The loaded recipes plus loading and error state.
+ */
+export const useQueryRecipesByArea = (area: string) => {
+  const { data: recipes = [], isLoading, isError, error } = useQuery<CleanRecipe[]>({
+    // Include the category in the key so React Query caches each area as a separate result.
+    /*So if the category changes from Pasta to Chicken, it does not reuse the old data. 
+     * It stores and fetches them separately, which prevents showing the wrong recipes for the wrong category.
+     */
+    queryKey: ['recipes', 'area', area],
+    queryFn: async () => {
+      const response = await filterByArea(area);
+      const data: RecipesList = await response.json();
+
+      if (!data.meals) {
+        return [];
+      }
+
+      return recipeFormatter(data);
+    },
+    enabled: !!area,
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+
+
 
 // #endregion
 // #region Use Effect API 

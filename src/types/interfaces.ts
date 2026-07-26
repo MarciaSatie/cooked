@@ -99,3 +99,10 @@ export interface Review {
   rating: number;
   movieId: string;
 }
+
+export interface Category {
+  idCategory: string;
+  strCategory: string;
+  strCategoryThumb: string;
+  strCategoryDescription:  string;
+}
