@@ -15,7 +15,7 @@ export default function ExpandableSection({ children }: ExpandableSectionProps) 
   };
 
   return (
-    <Box sx={{ maxWidth: 400, m: 2 }}>
+    <Box sx={{ maxWidth: 800, m: 2 }}>
       <Button
         variant="contained"
         onClick={handleToggle}

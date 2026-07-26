@@ -2,9 +2,10 @@ import React from "react"; // replace existing react import
 import { useParams } from "react-router-dom";
 import { useQueryRecipeByID } from '../../hooks/useRecipes'; 
 import Spinner from "../../components/spinner";
-import { Collapse ,Typography,Container,Box,Paper,Button ,Chip, Divider, CardMedia, IconButton, Tabs, Tab} from '@mui/material';
+import { Collapse ,Typography,Container,Box,Paper,Button ,Chip, Divider, CardMedia, IconButton, Tabs, Tab, Card} from '@mui/material';
 import PlaylistAddCheckCircleTwoToneIcon from '@mui/icons-material/PlaylistAddCheckCircleTwoTone';
 import ExpandableSection from "../expandableSection";
+import * as utils from '../../utils/utils' 
 
 function RecipesDetail() {
   const { id } = useParams();
@@ -16,6 +17,9 @@ function RecipesDetail() {
   if (isLoading) {return <Spinner />;}
   if (isError) {return <h1>{(error as Error).message}</h1>;}
 
+  // Break the strInstructions into smaller readable chunks.
+  const instructionSteps = utils.recipeInstructionsFormatter(recipe);
+
   return (
     // Box with flexbox ensures the footer stays at the bottom
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -26,22 +30,14 @@ function RecipesDetail() {
         {/* Paper MUI adds elevation/ dropshadow */}
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
           {/* Recipe Title */}
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography color="primary" variant="h4" component="h1" gutterBottom>
             {recipe.strMeal}
           </Typography>
 
           {/* Recipe Image */}
-          <CardMedia
-            component="img"
-            src={recipe.strMealThumb}
-            alt={recipe.strMeal}
-            sx={{
-              height: 400,
-              width: 'auto',          // Prevents the image from stretching horizontally
-              margin: '0 auto',       // Standard CSS trick to center block elements
-              objectFit: 'contain',   // Ensures the full image fits without cropping
-            }} />
-
+          <Box sx={{ gap: 1, mb: 2 }}>
+            {showVideoIfExistsOrImage(recipe.strMealThumb, recipe.strYoutube!)}
+          </Box>
           {/* Recipe Category */}
           <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
             <Chip label={recipe.strCategory} color="primary" size="small" />
@@ -77,27 +73,24 @@ function RecipesDetail() {
               </Typography>
             
               <ExpandableSection>
-                {recipe.ingredientsList.map((item, index) => (
-                  <Box component="li" key={index} sx={{ mb: 0.5 }}>
-                    <Typography variant="body2">
-                      <strong>{item.measure}</strong> {item.name}
+              <Box component="ol" sx={{ pl: 0, mt: 0, mb: 0, listStyle: 'none' }}>
+                    {instructionSteps.map((step, index) => (
+                  <Box component="li" key={index} sx={{ mb: 1.5, display: 'flex', gap: 1 }}>
+                    <Typography variant="body2" sx={{ minWidth: 32, fontWeight: 'bold' }}>
+                      {/* Converts 1, 2, 3 into 01, 02, 03 so the instruction list uses padded numbering */}
+                      {String(index + 1).padStart(2, '0')}.
                     </Typography>
-                  </Box>
-                ))}
+                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                      {step}
+                    </Typography>
+                    </Box>
+                    ))}
+                </Box>
               </ExpandableSection>
           </Box>
 
         </Paper>
       </Container>
-
-      {/* Footer */}
-      <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'grey.100' }}>
-        <Container maxWidth="sm">
-          <Typography variant="body2" color="text.secondary" align="center">
-            © {new Date().getFullYear()} My Company
-          </Typography>
-        </Container>
-      </Box>
 
     </Box>
   );
@@ -105,3 +98,34 @@ function RecipesDetail() {
 }
 
 export default RecipesDetail
+
+// -------------- Helper functions for this page ---------------------------
+function showVideoIfExistsOrImage(imgSrc: string, videoSrc: string | null) {
+  //if (videoSrc) works because JavaScript treats null, undefined, "", 0, and false as falsy.
+  if (videoSrc) {
+    return (
+      <Card sx={{ maxWidth: 800, margin: "0 auto" }}>
+        <CardMedia
+          component="iframe"
+          height="350"
+          src={videoSrc.replace("watch?v=", "embed/")}
+          title="Embedded YouTube Video"
+          sx={{ border: 0 }}
+        />
+      </Card>
+    );
+  }
+
+  return (
+    <CardMedia
+      component="img"
+      src={imgSrc}
+      sx={{
+        height: 400,
+        width: "auto",
+        margin: "0 auto",
+        objectFit: "contain",
+      }}
+    />
+  );
+}
