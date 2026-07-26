@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useParams } from "react-router-dom";
 import { useQueryRecipeByID } from '../../hooks/useRecipes'; 
 import Spinner from "../../components/spinner";
 import { Typography,Container,Box,Paper ,Chip, Divider, CardMedia, Tabs, Tab, Card} from '@mui/material';
@@ -7,21 +6,18 @@ import PlaylistAddCheckCircleTwoToneIcon from '@mui/icons-material/PlaylistAddCh
 import ExpandableSection from "../expandableSection";
 import * as utils from '../../utils/utils';
 import bgImage from "../../assets/backgorund_img.png";
-import bgImage2 from "../../assets/backgorund_img2.png";  
 import myLogo from '../../assets/cook-hat.png';
 
-function RecipesDetail() {
+type RecipesDetailProps = { id?: string };
+export default function RecipesDetail({ id }: RecipesDetailProps){
+
   const [tabValue, setTabValue] = useState<number>(0);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
-  const { id } = useParams();
-  console.log(`Recipe ID is ${id}`);
   
   const {recipe, isLoading, isError, error} = useQueryRecipeByID(id!);
-
   if (!recipe) return <div>No recipe found</div>;
   if (isLoading) {return <Spinner />;}
   if (isError) {return <h1>{(error as Error).message}</h1>;}
@@ -30,18 +26,8 @@ function RecipesDetail() {
   const instructionSteps = utils.recipeInstructionsFormatter(recipe);
 
   return (
-    <Box
-      sx={{
-        backgroundImage: `url(${bgImage2})`,
-        backgroundRepeat: "repeat",
-        backgroundPosition: "top left",
-        backgroundSize: "auto",
-      }}
-    > 
-
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', }}>
 
-      
         {/* Main Content Area */}
         {/* Container limits maximum width and centers content automatically */}
         <Container component="main" maxWidth="md" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
@@ -143,13 +129,12 @@ function RecipesDetail() {
         </Container>
 
       </Box>
-  
-  </Box>
+
   );
 
 }
 
-export default RecipesDetail
+
 
 // -------------- Helper functions for this page ---------------------------
 function showVideoIfExistsOrImage(imgSrc: string, videoSrc: string | null) {

@@ -34,7 +34,7 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
     <Card sx={cardSx}>
       <Box sx={{ position: 'relative' }}>
         <Tooltip title="Open recipe details" arrow>
-          <CardActionArea onClick={() => navigate(`/recipes/${recipe.idMeal}`)}
+          <CardActionArea onClick={() => navigate(`/recipesAtoZ/${recipe.idMeal}`)}
               sx={{
                 '&:hover img': {
                   opacity: 0.9,
