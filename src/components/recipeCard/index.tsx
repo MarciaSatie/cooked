@@ -43,6 +43,7 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
                 },
               }}
             >
+            {/* Recipe Image */}
             <CardMedia
               component="img"
               height="250"
@@ -74,10 +75,12 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
       </Box>
 
       <CardContent>
+        {/* Recipe Title */}
         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
           {recipe.strMeal}
         </Typography>
 
+        {/* Recipe Category */}
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
           <Chip label={recipe.strCategory} color="primary" size="small" />
           <Chip label={recipe.strArea} color="secondary" variant="outlined" size="small" />

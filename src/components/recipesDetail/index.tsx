@@ -2,9 +2,9 @@ import React from "react"; // replace existing react import
 import { useParams } from "react-router-dom";
 import { useQueryRecipeByID } from '../../hooks/useRecipes'; 
 import Spinner from "../../components/spinner";
-import { Toolbar,Typography,Container,Box,Paper,Button ,Chip, Divider, CardMedia, IconButton, Tabs, Tab} from '@mui/material';
-
-
+import { Collapse ,Typography,Container,Box,Paper,Button ,Chip, Divider, CardMedia, IconButton, Tabs, Tab} from '@mui/material';
+import PlaylistAddCheckCircleTwoToneIcon from '@mui/icons-material/PlaylistAddCheckCircleTwoTone';
+import ExpandableSection from "../expandableSection";
 
 function RecipesDetail() {
   const { id } = useParams();
@@ -20,7 +20,7 @@ function RecipesDetail() {
     // Box with flexbox ensures the footer stays at the bottom
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       
-      {/* 2. Main Content Area */}
+      {/* Main Content Area */}
       {/* Container limits maximum width and centers content automatically */}
       <Container component="main" maxWidth="md" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         {/* Paper MUI adds elevation/ dropshadow */}
@@ -30,21 +30,67 @@ function RecipesDetail() {
             {recipe.strMeal}
           </Typography>
 
+          {/* Recipe Image */}
           <CardMedia
             component="img"
             src={recipe.strMealThumb}
             alt={recipe.strMeal}
-            sx={{ width: '100%', borderRadius: 2 }}
-          />
-          <Typography variant="body1" color="text.secondary">
-            This is a clean, structured starting point for your new page. 
-            The Paper component acts as a nice white canvas for your forms, 
-            tables, or text.
-          </Typography>
+            sx={{
+              height: 400,
+              width: 'auto',          // Prevents the image from stretching horizontally
+              margin: '0 auto',       // Standard CSS trick to center block elements
+              objectFit: 'contain',   // Ensures the full image fits without cropping
+            }} />
+
+          {/* Recipe Category */}
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Chip label={recipe.strCategory} color="primary" size="small" />
+            <Chip label={recipe.strArea} color="secondary" variant="outlined" size="small" />
+          </Box>
+          
+
+          {/* Ingrevient List */}
+            <Box component="ul" sx={{ pl: 2, mt: 0, mb: 0 }}>
+              <Typography variant="subtitle1" sx={{ fontSize: 25 ,fontWeight: 'bold', mb: 1 }}>
+               <PlaylistAddCheckCircleTwoToneIcon color="secondary">
+               </PlaylistAddCheckCircleTwoToneIcon> 
+                Ingredients List
+              </Typography>
+            
+              <ExpandableSection>
+                {recipe.ingredientsList.map((item, index) => (
+                  <Box component="li" key={index} sx={{ mb: 0.5 }}>
+                    <Typography variant="body2">
+                      <strong>{item.measure}</strong> {item.name}
+                    </Typography>
+                  </Box>
+                ))}
+              </ExpandableSection>
+          </Box>
+          
+          {/* Recipe Instructions */}
+          <Box component="ul" sx={{ pl: 2, mt: 0, mb: 0 }}>
+              <Typography variant="subtitle1" sx={{ fontSize: 25 ,fontWeight: 'bold', mb: 1 }}>
+               <PlaylistAddCheckCircleTwoToneIcon color="secondary">
+               </PlaylistAddCheckCircleTwoToneIcon> 
+                Instructions
+              </Typography>
+            
+              <ExpandableSection>
+                {recipe.ingredientsList.map((item, index) => (
+                  <Box component="li" key={index} sx={{ mb: 0.5 }}>
+                    <Typography variant="body2">
+                      <strong>{item.measure}</strong> {item.name}
+                    </Typography>
+                  </Box>
+                ))}
+              </ExpandableSection>
+          </Box>
+
         </Paper>
       </Container>
 
-      {/* 3. Footer */}
+      {/* Footer */}
       <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'grey.100' }}>
         <Container maxWidth="sm">
           <Typography variant="body2" color="text.secondary" align="center">
