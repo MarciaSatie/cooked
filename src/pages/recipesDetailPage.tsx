@@ -6,7 +6,7 @@ import RecipesDetail from "../components/recipesDetail";
 import GoToNextRecipe from "../components/cardIcons/goToNextRecipe";
 import GoToPreviousRecipe from "../components/cardIcons/goToPreviousRecipe";
 
-export default function RecipesAtoZDetail() {
+export default function RecipesDetailPage() {
   const { id } = useParams();
   console.log(`Recipe ID is ${id}`);
   const idNumber = parseInt(id!, 10); // Added radix 10 for safety
