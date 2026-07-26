@@ -11,6 +11,7 @@ import SurpriseMe from './pages/surpriseMe'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import RecipesDetailPage from './pages/recipesDetailPage';
+import RecipesContextProvider from './contexts/recipesContext';
 
 
 const queryClient = new QueryClient();
@@ -20,18 +21,20 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <Header title='Welcome to Cooked' />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/surpriseMe' element={<SurpriseMe />} />
-            <Route path='/favorites' element={<FavoritesPage />} />
-            <Route path='/recipesAtoZ/:id' element={<RecipesDetailPage />} />
-          </Routes>
-          <ReactQueryDevtools initialIsOpen={true} />
-        </QueryClientProvider>
-      </BrowserRouter>
+      <RecipesContextProvider>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <Header title='Welcome to Cooked' />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/surpriseMe' element={<SurpriseMe />} />
+              <Route path='/favorites' element={<FavoritesPage />} />
+              <Route path='/recipesAtoZ/:id' element={<RecipesDetailPage />} />
+            </Routes>
+            <ReactQueryDevtools initialIsOpen={true} />
+          </QueryClientProvider>
+        </BrowserRouter>
+      </RecipesContextProvider>
 
 
     </ThemeProvider>

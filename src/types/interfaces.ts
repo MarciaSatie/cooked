@@ -91,3 +91,11 @@ export interface Recipe {
   strMeasure19?: string | null;
   strMeasure20?: string | null;
 }
+
+export interface Review {
+  author: string;
+  content: string;
+  agree: boolean;
+  rating: number;
+  movieId: string;
+}

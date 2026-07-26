@@ -1,11 +1,14 @@
-import React, {MouseEvent, useContext} from "react";
-import { MoviesContext } from "../../../contexts/moviesContext";
+
+import React, { useContext } from "react";
+import type { MouseEvent } from "react"; // because of  tsconfig.app.json has verbatimModuleSyntax: true ; equires types to be imported with import type
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import {BaseMovieProps} from "../../../types/interfaces"
+import { RecipesContext } from "../../contexts/recipesContext";
+import type { CleanRecipe } from "../../types/interfaces"; // because of  tsconfig.app.json has verbatimModuleSyntax: true ; equires types to be imported with import type
 
-const AddToFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
-  const context = useContext(MoviesContext);
+
+const AddToFavouritesIcon: React.FC<CleanRecipe> = (movie) => {
+  const context = useContext(RecipesContext);
 
   const onUserSelect = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

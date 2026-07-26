@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Card,CardActionArea, CardContent, Typography, Box, Chip, Divider, CardMedia, IconButton, Tabs, Tab } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -6,6 +6,7 @@ import type { CleanRecipe } from '../../types/interfaces';
 import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import * as utils from '../../utils/utils' 
+import { RecipesContext } from '../../contexts/recipesContext';
 
 // Local props type for the RecipeCard component.
 // The editor symbol label may show RecipeCardProps, but that is only a reference to this type.
@@ -16,6 +17,8 @@ type RecipeCardProps = {
 
 export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
     const navigate = useNavigate(); //Initialize the navigate function
+  const { favourites, addToFavourites, removeFromFavourites } = useContext(RecipesContext);
+  const isFavourite = favourites.includes(recipe.idMeal);
     const [tabValue, setTabValue] = useState<number>(0);
     const cardSx: SxProps<Theme> = [
       { width: '100%', borderRadius: 2, overflow: 'hidden' },
@@ -63,12 +66,22 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
               backgroundColor: 'rgba(255, 255, 255, 0.9)', // Brighten on hover
             },
           }}
-          onClick={() => console.log('Heart clicked for recipe:', recipe.idMeal)}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (isFavourite) {
+              removeFromFavourites(recipe);
+              return;
+            }
+
+            addToFavourites(recipe);
+          }}
         >
           {/* Icon color reflects the current favorite state */}
           <FavoriteIcon 
             sx={{ 
-              color: recipe.isFavorite ? '#e53935' : '#b0bec5' 
+              color: isFavourite ? '#e53935' : '#b0bec5' 
             }} 
           />
         </IconButton>

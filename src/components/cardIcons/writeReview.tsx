@@ -1,15 +1,15 @@
 import React from "react";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import { Link } from "react-router-dom";
-import { BaseMovieProps } from "../../types/interfaces";
+import type { CleanRecipe } from "../../types/interfaces"; // because of  tsconfig.app.json has verbatimModuleSyntax: true ; equires types to be imported with import type
 
 type WriteReviewProps = {
-  movie: BaseMovieProps;
+  recipe: CleanRecipe;
 };
 
-const WriteReviewIcon: React.FC<WriteReviewProps> = ({ movie }) => {
+const WriteReviewIcon: React.FC<WriteReviewProps> = ({ recipe }) => {
   return (
-    <Link to="/reviews/form" state={{ movieId: movie.id }}>
+    <Link to="/reviews/form" state={{ recipeId: recipe.idMeal }}>
       <RateReviewIcon color="primary" fontSize="large" />
     </Link>
   );
