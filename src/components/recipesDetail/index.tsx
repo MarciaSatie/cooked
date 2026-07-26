@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useQueryRecipeByID } from '../../hooks/useRecipes'; 
 import Spinner from "../../components/spinner";
-import { Typography,Container,Box,Paper ,Chip, Divider, CardMedia, IconButton, Tabs, Tab, Card} from '@mui/material';
+import { Typography,Container,Box,Paper ,Chip, Divider, CardMedia, Tabs, Tab, Card} from '@mui/material';
 import PlaylistAddCheckCircleTwoToneIcon from '@mui/icons-material/PlaylistAddCheckCircleTwoTone';
 import ExpandableSection from "../expandableSection";
 import * as utils from '../../utils/utils';
@@ -11,6 +11,12 @@ import bgImage2 from "../../assets/backgorund_img2.png";
 import myLogo from '../../assets/cook-hat.png';
 
 function RecipesDetail() {
+  const [tabValue, setTabValue] = useState<number>(0);
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   const { id } = useParams();
   console.log(`Recipe ID is ${id}`);
   
@@ -22,11 +28,6 @@ function RecipesDetail() {
 
   // Break the strInstructions into smaller readable chunks.
   const instructionSteps = utils.recipeInstructionsFormatter(recipe);
-  const [tabValue, setTabValue] = useState<number>(0);
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   return (
     <Box
