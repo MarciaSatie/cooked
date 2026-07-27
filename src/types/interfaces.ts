@@ -106,3 +106,5 @@ export interface Category {
   strCategoryThumb: string;
   strCategoryDescription:  string;
 }
+
+export type FilterOption = "title" | "country" | "ingredients";

@@ -72,67 +72,73 @@ export default function RecipeCard({ recipe, sx }: RecipeCardProps) {
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
           <Chip label={recipe.strCategory} color="primary" size="small" />
           <Chip label={recipe.strArea} color="secondary" variant="outlined" size="small" />
+          <Chip label={recipe.strCountry} color="primary" variant="outlined" size="small" />
         </Box>
 
         <Divider sx={{ my: 2 }} />
 
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-          Ingredients
-        </Typography>
+        {/* Recipe Ingredients and Instructions */}
+        {recipe.ingredientsList?.length > 0 && (
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
+              Ingredients
+            </Typography>
 
-        {/* Tabs switch between ingredients and instructions */}
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
-        >
-          <Tab label="Ingredients" />  {/* Index 0 */}
-          <Tab label="Instructions" />  {/* Index 1 */}
-        </Tabs>
-        <Box
-            sx={{ 
-                maxHeight: 250,       // 1. Sets the maximum height limit (in pixels) -- Tab Content Styles
-                overflowY: 'auto',    // 2. Adds a vertical scrollbar ONLY if content overflows
-                pr: 1,                // 3. Adds a tiny bit of right padding so text doesn't touch the scrollbar
-                // Optional: Smooth styling for the scrollbar on modern browsers
-                '&::-webkit-scrollbar': { width: '6px' },
-                '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' }
-            }}>
-            
-            {/*Ingredients Tab */}
-            {tabValue === 0 && (
-                <Box component="ul" sx={{ pl: 2, mt: 0, mb: 0 }}>
-                    {recipe.ingredientsList.map((item, index) => (
-                    <Box component="li" key={index} sx={{ mb: 0.5 }}>
-                        <Typography variant="body2">
-                        <strong>{item.measure}</strong> {item.name}
+            {/* Tabs switch between ingredients and instructions */}
+            <Tabs
+              value={tabValue}
+              onChange={handleTabChange}
+              variant="fullWidth"
+              sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tab label="Ingredients" />  {/* Index 0 */}
+              <Tab label="Instructions" />  {/* Index 1 */}
+            </Tabs>
+            <Box
+                sx={{ 
+                    maxHeight: 250,       // 1. Sets the maximum height limit (in pixels) -- Tab Content Styles
+                    overflowY: 'auto',    // 2. Adds a vertical scrollbar ONLY if content overflows
+                    pr: 1,                // 3. Adds a tiny bit of right padding so text doesn't touch the scrollbar
+                    // Optional: Smooth styling for the scrollbar on modern browsers
+                    '&::-webkit-scrollbar': { width: '6px' },
+                    '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' }
+                }}>
+                
+                {/*Ingredients Tab */}
+                {tabValue === 0 && (
+                    <Box component="ul" sx={{ pl: 2, mt: 0, mb: 0 }}>
+                        {recipe.ingredientsList.map((item, index) => (
+                        <Box component="li" key={index} sx={{ mb: 0.5 }}>
+                            <Typography variant="body2">
+                            <strong>{item.measure}</strong> {item.name}
+                            </Typography>
+                        </Box>
+                        ))}
+                    </Box>
+                )}
+                {/*Instructions Tab 
+                - Using Short-Circuit Evaluation. Instead of using CSS to hide elements, your approach completely creates (mounts) or destroys (unmounts) the elements in real-time.
+                - Shor-Circuit Evaluation: Basicaly if the left information is true JS will run whenever it is in the right side.
+                - With the || (OR) operator, short-circuit evaluation works exactly the opposite way of &&.
+                */}
+                {tabValue === 1 && (
+                  <Box component="ol" sx={{ pl: 0, mt: 0, mb: 0, listStyle: 'none' }}>
+                        {instructionSteps.map((step, index) => (
+                      <Box component="li" key={index} sx={{ mb: 1.5, display: 'flex', gap: 1 }}>
+                        <Typography variant="body2" sx={{ minWidth: 32, fontWeight: 'bold' }}>
+                          {/* Converts 1, 2, 3 into 01, 02, 03 so the instruction list uses padded numbering */}
+                          {String(index + 1).padStart(2, '0')}.
                         </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                          {step}
+                        </Typography>
+                        </Box>
+                        ))}
                     </Box>
-                    ))}
-                </Box>
-            )}
-            {/*Instructions Tab 
-            - Using Short-Circuit Evaluation. Instead of using CSS to hide elements, your approach completely creates (mounts) or destroys (unmounts) the elements in real-time.
-            - Shor-Circuit Evaluation: Basicaly if the left information is true JS will run whenever it is in the right side.
-            - With the || (OR) operator, short-circuit evaluation works exactly the opposite way of &&.
-            */}
-            {tabValue === 1 && (
-              <Box component="ol" sx={{ pl: 0, mt: 0, mb: 0, listStyle: 'none' }}>
-                    {instructionSteps.map((step, index) => (
-                  <Box component="li" key={index} sx={{ mb: 1.5, display: 'flex', gap: 1 }}>
-                    <Typography variant="body2" sx={{ minWidth: 32, fontWeight: 'bold' }}>
-                      {/* Converts 1, 2, 3 into 01, 02, 03 so the instruction list uses padded numbering */}
-                      {String(index + 1).padStart(2, '0')}.
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                      {step}
-                    </Typography>
-                    </Box>
-                    ))}
-                </Box>
-            )}
-        </Box>
+                )}
+            </Box>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

@@ -7,6 +7,7 @@ import Header from './components/header';
 import Home from './pages/homePage'
 import FavoritesPage from './pages/favoritesPage'
 import SurpriseMe from './pages/surpriseMe'
+import CategoriesPage from './pages/categoriesPage'
 // tanstack is same as React-Query it jsut also works fro Vue, Svelte, etc...
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path='/surpriseMe' element={<SurpriseMe />} />
               <Route path='/favorites' element={<FavoritesPage />} />
               <Route path='/recipesAtoZ/:id' element={<RecipesDetailPage />} />
+              <Route path='/categories' element={<CategoriesPage />} />
             </Routes>
             <ReactQueryDevtools initialIsOpen={true} />
           </QueryClientProvider>

@@ -7,7 +7,13 @@ import type { CleanRecipe } from '../types/interfaces';
  */
 
 export function recipeInstructionsFormatter(recipe:CleanRecipe):string[]{
-    const instructionSteps = recipe.strInstructions
+    const instructions = recipe.strInstructions ?? '';
+
+    if (!instructions.trim()) {
+        return [];
+    }
+
+    const instructionSteps = instructions
     .split(/\n+/)//breaks the instructions into chunks wherever there is one or more newline characters.
     .flatMap((section) => section.split(/\.\s+/)) // breaks each chunk into smaller sentences using a period followed by spaces.
     .map((step) => step.trim().replace(/\.$/, '')) // removes extra spaces and strips a trailing period from each step.

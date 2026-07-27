@@ -1,4 +1,3 @@
-// src/pages/Recipes.tsx
 import { useState } from "react";
 import { Box, Typography, Divider} from '@mui/material';
 import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes'; 
@@ -6,21 +5,59 @@ import { useQueryRecipesByFirstLetter } from '../hooks/useRecipes';
 import LettersBTN from '../components/lettersBTN';
 import Spinner from "../components/spinner";
 import CardList from "../components/cardList"
+import RecipeFilterUI from "../components/recipeFilterUI";
+import { filterRecipes } from "../utils/recipeFilters";
 
 export default function Home() {
   const [chosenLetter, setchosenLetter] = useState("A");
+  const [titleFilter, setTitleFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
+  const [ingredientsFilter, setIngredientsFilter] = useState("");
+  const [ingredientsFilterList, setIngredientsFilterList] = useState<string[]>([]);
 
   const handleChildSelection = (letter: string) => {
     setchosenLetter(letter);
   };
 
+  const handleAddIngredient = () => {
+    const nextIngredient = ingredientsFilter.trim();
+
+    if (!nextIngredient) {
+      return;
+    }
+
+    setIngredientsFilterList((prevIngredients) =>
+      prevIngredients.includes(nextIngredient)
+        ? prevIngredients
+        : [...prevIngredients, nextIngredient]
+    );
+    setIngredientsFilter("");
+  };
+
+  const handleDeleteIngredient = (ingredientToRemove: string) => {
+    setIngredientsFilterList((prevIngredients) =>
+      prevIngredients.filter((item) => item !== ingredientToRemove)
+    );
+  };
+
+  const handleClearIngredients = () => {
+    setIngredientsFilterList([]);
+    setIngredientsFilter("");
+  };
+
   const {recipes, isLoading, isError, error} = useQueryRecipesByFirstLetter(chosenLetter);
+
+  const filteredRecipes = filterRecipes(recipes, {
+    titleFilter,
+    countryFilter,
+    ingredientsFilterList,
+  });
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  const totalRecipes = recipes.length;
+  const totalRecipes = filteredRecipes.length;
 
   // Call the hook and pass the recipe List By First Letter you want to fetch
   //const { recipes } = useRecipesByFirstLetter(chosenLetter);
@@ -38,6 +75,20 @@ export default function Home() {
         selectedLetter={chosenLetter}
         onLetterSelect={handleChildSelection}
       />
+
+      <RecipeFilterUI
+        titleFilter={titleFilter}
+        countryFilter={countryFilter}
+        ingredientsFilter={ingredientsFilter}
+        ingredientsFilterList={ingredientsFilterList}
+        onAddIngredient={handleAddIngredient}
+        onDeleteIngredient={handleDeleteIngredient}
+        onClearIngredients={handleClearIngredients}
+        onTitleChange={setTitleFilter}
+        onCountryChange={setCountryFilter}
+        onIngredientChange={setIngredientsFilter}
+      />
+
       <Divider sx={{ my: 3 }} /> 
 
       {isError && <Typography color="error">{error instanceof Error ? error.message : 'Failed to load recipes.'}</Typography>}
@@ -55,7 +106,7 @@ export default function Home() {
       <p>Total Recipes: {totalRecipes}</p>
 
       {/* Card List Component*/}
-      <CardList recipes={recipes} />
+      <CardList recipes={filteredRecipes} />
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Pagination } from "@mui/material";
 import RecipeCard from "../recipeCard";
 import type { CleanRecipe } from "../../types/interfaces";
@@ -11,6 +11,11 @@ type CardListProps = {
 export default function CardList({ recipes }: CardListProps) {
   const [page, setPage] = useState(1);
   const RECIPES_PER_PAGE = 5;
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1);
+  }, [recipes]);
 
   const totalRecipes = recipes.length;
   /*
