@@ -1,11 +1,22 @@
 import type { CleanRecipe } from "../types/interfaces";
 
+/**
+ * Describes the available search filters that can be applied to a list of recipes.
+ */
 type RecipeFilters = {
   titleFilter: string;
   countryFilter: string;
   ingredientsFilterList: string[];
 };
 
+/**
+ * Filters a collection of recipes based on the provided title, country, and ingredient criteria.
+ * Matching is case-insensitive and recipes must satisfy all active filters to be returned.
+ *
+ * @param recipes The recipes to evaluate.
+ * @param filters The filtering options to apply.
+ * @returns A new array containing only the recipes that match the supplied filters.
+ */
 export function filterRecipes(recipes: CleanRecipe[], filters: RecipeFilters): CleanRecipe[] {
   // Normalize the title filter so matching is case-insensitive.
   const titleQuery = filters.titleFilter.trim().toLowerCase();
