@@ -21,9 +21,15 @@ export default function Header({ title }: HeaderProps) {
       <Toolbar>
         <Box component="img" src={myLogo} alt="Logo" sx={{ width: 50, height: 50, marginRight: 2 }} />
 
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        <Typography variant="body2" color="inherit">
+          Hi {user?.email}
+        </Typography>
+
+        <Typography variant="h6">
           {title}
         </Typography>
+      </Box>
 
         {user && (
           <Box sx={{ display: "flex", gap: 2 }}>
