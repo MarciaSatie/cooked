@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import myLogo from "../../assets/cook-hat.png";
-import { useAuth } from "../../auth/AuthContextType";
+import { useAuth } from "../../supabase/auth";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 interface HeaderProps {
@@ -38,7 +38,9 @@ export default function Header({ title }: HeaderProps) {
             <Button color="inherit" component={RouterLink} to="/surpriseMe">Surprise ME!</Button>
             <Button color="inherit" component={RouterLink} to="/categories">Categories</Button>
             <Button color="inherit" component={RouterLink} to="/favorites">Favorites</Button>
-            <Button color="inherit" onClick={handleSignOut} title="Log out" endIcon={<LogoutIcon />}></Button>
+            <Button color="inherit" onClick={handleSignOut} title="Log out" endIcon={<LogoutIcon />}>
+              Sign out
+            </Button>
           </Box>
         )}
       </Toolbar>

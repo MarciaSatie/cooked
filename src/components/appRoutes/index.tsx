@@ -1,12 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useAuth } from "../../auth/AuthContextType";
-import AuthPage from "../../auth/AuthPage";
+import { AuthPage, Signup, useAuth } from "../../supabase/auth";
 import CategoriesPage from "../../pages/categoriesPage";
 import FavoritesPage from "../../pages/favoritesPage";
 import Home from "../../pages/homePage";
 import RecipesDetailPage from "../../pages/recipesDetailPage";
 import SurpriseMe from "../../pages/surpriseMe";
-import Signup from '../../auth/Signup'
 
 
 export default function AppRoutes() {
@@ -22,7 +20,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/sign-up"
-        element={ <Signup /> }
+        element={<Signup />}
       />
       <Route
         path="/home"

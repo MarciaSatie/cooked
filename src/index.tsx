@@ -9,7 +9,7 @@ import AppRoutes from './components/appRoutes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import RecipesContextProvider from './contexts/recipesContext';
-import { AuthProvider } from './auth/AuthContextType';
+import { AuthProvider } from './supabase';
 
 const queryClient = new QueryClient();
 
