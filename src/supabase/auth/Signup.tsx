@@ -12,15 +12,35 @@ export default function Signup() {
 
   const handleRegisterUser = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     const { data, error } = await supabase.auth.signUp({ email, password });
-
+  
     if (error) {
       console.error('Registration failed:', error.message);
       setMessage(error.message);
       return;
     }
-
-    console.log('User created:', data.user);
+  
+    // If email confirmation is enabled, user may not be fully confirmed yet,
+    // but data.user will still include an id.
+    const user = data.user;
+    if (!user) {
+      setMessage('Sign up succeeded, but no user object returned.');
+      return;
+    }
+  
+    // Insert into your app table using the Auth UUID
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({ id: user.id });
+  
+    if (profileError) {
+      console.error('Profile insert failed:', profileError.message);
+      setMessage(profileError.message);
+      return;
+    }
+  
+    console.log('User created:', user);
     setMessage('User created');
   };
 
