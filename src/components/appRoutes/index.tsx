@@ -6,6 +6,7 @@ import FavoritesPage from "../../pages/favoritesPage";
 import Home from "../../pages/homePage";
 import RecipesDetailPage from "../../pages/recipesDetailPage";
 import SurpriseMe from "../../pages/surpriseMe";
+import Signup from '../../auth/Signup'
 
 
 export default function AppRoutes() {
@@ -18,6 +19,10 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={user ? <Navigate to="/home" replace /> : <AuthPage />}
+      />
+      <Route
+        path="/sign-up"
+        element={ <Signup /> }
       />
       <Route
         path="/home"

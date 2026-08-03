@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Paper, Typography,Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
@@ -24,6 +25,7 @@ export default function AuthPage() {
     e.preventDefault();
     const { error } = await supabase.auth.signUp({ email, password });
     setMessage(error ? error.message : 'Check your email for confirmation links!');
+    navigate('/sign-up');
   };
 
   return (
@@ -34,7 +36,15 @@ export default function AuthPage() {
           <TextField label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} fullWidth />
           <TextField label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} fullWidth />
           <Button variant="contained" type="submit" fullWidth>Sign In</Button>
-          <Button variant="outlined" type="button" onClick={handleSignUp} fullWidth>Sign Up</Button>
+          <Button
+            variant="outlined"
+            type="button"
+            onClick={handleSignUp}
+            fullWidth
+            startIcon={<PersonAddAltIcon />}
+          >
+            Sign Up
+          </Button>
           {message && <Typography color="error" variant="body2" sx={{ mt: 1 }}>{message}</Typography>}
         </Box>
       </Paper>
