@@ -1,12 +1,21 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import { Link as RouterLink } from 'react-router-dom'
-import myLogo from '../../assets/cook-hat.png';
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import myLogo from "../../assets/cook-hat.png";
+import { useAuth } from "../../auth/AuthContextType";
 
 interface HeaderProps {
-  title: string;          
+  title: string;
 }
 
 export default function Header({ title }: HeaderProps) {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/"); // back to login page
+  };
+
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
@@ -16,20 +25,15 @@ export default function Header({ title }: HeaderProps) {
           {title}
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Button color="inherit" component={RouterLink} to="/">
-            Recipes A–Z 
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/surpriseMe">
-            Surprise ME!
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/categories">
-            Categories
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/favorites">
-            Favorites
-          </Button>
-        </Box>
+        {user && (
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button color="inherit" component={RouterLink} to="/home">Home</Button>
+            <Button color="inherit" component={RouterLink} to="/surpriseMe">Surprise ME!</Button>
+            <Button color="inherit" component={RouterLink} to="/categories">Categories</Button>
+            <Button color="inherit" component={RouterLink} to="/favorites">Favorites</Button>
+            <Button color="inherit" onClick={handleSignOut}>Sign out</Button>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

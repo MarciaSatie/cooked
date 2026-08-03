@@ -1,19 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter} from 'react-router-dom'
 import { theme } from './theme'
 import Header from './components/header';
-import Home from './pages/homePage'
-import FavoritesPage from './pages/favoritesPage'
-import SurpriseMe from './pages/surpriseMe'
-import CategoriesPage from './pages/categoriesPage'
+import AppRoutes from './components/appRoutes'
 // tanstack is same as React-Query it jsut also works fro Vue, Svelte, etc...
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import RecipesDetailPage from './pages/recipesDetailPage';
 import RecipesContextProvider from './contexts/recipesContext';
-
+import { AuthProvider } from './auth/AuthContextType';
 
 const queryClient = new QueryClient();
 
@@ -21,22 +17,17 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-      <RecipesContextProvider>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <Header title='Welcome to Cooked' />
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/surpriseMe' element={<SurpriseMe />} />
-              <Route path='/favorites' element={<FavoritesPage />} />
-              <Route path='/recipesAtoZ/:id' element={<RecipesDetailPage />} />
-              <Route path='/categories' element={<CategoriesPage />} />
-            </Routes>
-            <ReactQueryDevtools initialIsOpen={true} />
-          </QueryClientProvider>
-        </BrowserRouter>
-      </RecipesContextProvider>
+      <AuthProvider>
+        <RecipesContextProvider>
+          <BrowserRouter>
+            <QueryClientProvider client={queryClient}>
+            <Header title="Welcome to Cooked" />
+                <AppRoutes/>
+              <ReactQueryDevtools initialIsOpen={true} />
+            </QueryClientProvider>
+          </BrowserRouter>
+        </RecipesContextProvider>
+      </AuthProvider>
 
 
     </ThemeProvider>
