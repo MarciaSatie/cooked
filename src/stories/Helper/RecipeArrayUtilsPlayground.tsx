@@ -1,114 +1,173 @@
-import * as React from 'react';
-import type { CleanRecipe } from '../../types/interfaces';
-import {
-  filterRecipesByCategory,
-  getFavoriteRecipes,
-  sortRecipesByName,
-  toggleRecipeFavorite,
-} from '../../utils/recipeArrayUtils';
+import * as React from "react";
+import { useState } from "react";
+import { Box, Button, Chip} from '@mui/material';
+import TextField from "@mui/material/TextField";
+import type { CleanRecipe } from "../../types/interfaces";
 
 const sampleRecipes: CleanRecipe[] = [
   {
-    idMeal: '1',
-    strMeal: 'Spaghetti Carbonara',
-    strCategory: 'Pasta',
-    strArea: 'Italian',
-    strCountry: 'Italy',
-    strInstructions: 'Cook pasta and mix with sauce.',
-    strMealThumb: '',
+    idMeal: "1",
+    strMeal: "Spaghetti Carbonara",
+    strCategory: "Pasta",
+    strArea: "Italian",
+    strCountry: "Italy",
+    strInstructions: "Cook pasta and mix with sauce.",
+    strMealThumb: "",
     strTags: null,
     strYoutube: null,
-    ingredientsList: [{ name: 'Pasta', measure: '200g' }],
+    ingredientsList: [{ name: "Pasta", measure: "200g" },{ name: "Tomato", measure: "4" }],
     isFavorite: false,
   },
   {
-    idMeal: '2',
-    strMeal: 'Chicken Curry',
-    strCategory: 'Chicken',
-    strArea: 'Indian',
-    strCountry: 'India',
-    strInstructions: 'Simmer chicken with curry spices.',
-    strMealThumb: '',
+    idMeal: "2",
+    strMeal: "Chicken Curry",
+    strCategory: "Chicken",
+    strArea: "Indian",
+    strCountry: "India",
+    strInstructions: "Simmer chicken with curry spices.",
+    strMealThumb: "",
     strTags: null,
     strYoutube: null,
-    ingredientsList: [{ name: 'Chicken', measure: '300g' }],
+    ingredientsList: [{ name: "Chicken", measure: "300g" }],
     isFavorite: true,
   },
   {
-    idMeal: '3',
-    strMeal: 'Taco Bowl',
-    strCategory: 'Mexican',
-    strArea: 'Mexican',
-    strCountry: 'Mexico',
-    strInstructions: 'Assemble taco ingredients in a bowl.',
-    strMealThumb: '',
+    idMeal: "3",
+    strMeal: "Taco Bowl",
+    strCategory: "Mexican",
+    strArea: "Mexican",
+    strCountry: "Mexico",
+    strInstructions: "Assemble taco ingredients in a bowl.",
+    strMealThumb: "",
     strTags: null,
     strYoutube: null,
-    ingredientsList: [{ name: 'Beans', measure: '1 cup' }],
+    ingredientsList: [{ name: "Beans", measure: "1 cup" }],
+    isFavorite: false,
+  },
+  {
+    idMeal: "4",
+    strMeal: "Spaghetti Carbonara and Tuna",
+    strCategory: "Pasta",
+    strArea: "Italian",
+    strCountry: "Italy",
+    strInstructions: "Cook pasta and mix with sauce.",
+    strMealThumb: "",
+    strTags: null,
+    strYoutube: null,
+    ingredientsList: [{ name: "Pasta", measure: "200g" },{ name: "Tomato", measure: "4" },{ name: "Tuna", measure: "1 can" }],
     isFavorite: false,
   },
 ];
 
 export function RecipeArrayUtilsPlayground() {
-  const [recipes, setRecipes] = React.useState<CleanRecipe[]>(sampleRecipes);
-  const [categoryFilter, setCategoryFilter] = React.useState('');
+  const [titleFilter, setTitleFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
+  const [ingredientsFilter, setIngredientsFilter] = useState("");
+  const [ingredientsFilterList, setIngredientsFilterList] = useState<string[]>([]);
 
-  const handleToggleFavorite = (idMeal: string) => {
-    setRecipes((current) => toggleRecipeFavorite(current, idMeal));
-  };
+  const handleAddIngredient = () => {
+    const nextIngredient = ingredientsFilter.trim();
+    // if list includes prevIngredients return true else false
+    setIngredientsFilterList((prevIngredients) =>
+      prevIngredients.includes(nextIngredient)? prevIngredients: [...prevIngredients,nextIngredient]
+    );
+    setIngredientsFilter("");
+  }
 
-  const filteredByCategory = filterRecipesByCategory(recipes, categoryFilter);
-  const favoriteRecipes = getFavoriteRecipes(recipes);
-  const sortedRecipes = sortRecipesByName(recipes);
+  const handleDeleteIngredient =(ingredientToRemove:string) => {
+    setIngredientsFilterList((prevIngredients) =>
+      prevIngredients.filter((item) => item !== ingredientToRemove)
+    );
+  }
+
+  const filteredRecipes = sampleRecipes.filter((recipe) =>
+    recipe.strMeal.toLowerCase().includes(titleFilter.toLowerCase())&&
+    recipe.strCountry.toLowerCase().includes(countryFilter.toLowerCase())&&
+    ingredientsFilterList.every((selectedIngredient) => 
+      // Search through the recipe ingredient list for a matching ingredient name.
+      recipe.ingredientsList.some((ingredient) =>
+        ingredient.name.toLowerCase().includes(selectedIngredient.toLowerCase())
+      )
+    )
+  );
+
+
 
   return (
-    <div style={{ width: '720px', fontFamily: 'sans-serif' }}>
-      <h2>Recipe array utilities playground</h2>
-      <p>Use this Storybook view to try array helpers with recipe data.</p>
-
-      <label style={{ display: 'block', marginBottom: '8px' }}>
-        Category filter
-        <input
-          value={categoryFilter}
-          onChange={(event) => setCategoryFilter(event.target.value)}
-          placeholder="e.g. Pasta"
-          style={{ display: 'block', width: '100%', marginTop: '6px', padding: '8px' }}
+    <div style={{ width: "720px", fontFamily: "sans-serif" }}>
+      <h2>Recipe Filter Playground</h2>
+      <hr></hr>
+      <Box>
+        <p>Testing Filter by Title.</p>
+        <TextField
+          sx={{ mt: 2, width: "100%", backgroundColor: "white" }}
+          label="Recipe name"
+          type="search"
+          variant="filled"
+          value={titleFilter}
+          onChange={(e) => setTitleFilter(e.target.value)}
         />
-      </label>
 
-      <div style={{ display: 'grid', gap: '12px', marginTop: '16px' }}>
-        <section>
-          <h3>Original recipes</h3>
-          <pre style={{ background: '#f5f5f5', padding: '12px', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(recipes, null, 2)}
-          </pre>
-        </section>
+      </Box>
+      <Box>
+        <TextField
+            sx={{ mt: 2, width: "100%", backgroundColor: "rgb(255, 255, 255)" }}
+            id="country-search"
+            label="Country"
+            type="search"
+            variant="filled"
+            value={countryFilter}
+            onChange={(e) => setCountryFilter(e.target.value)}
+        />
+      </Box>
 
-        <section>
-          <h3>Filtered by category</h3>
-          <pre style={{ background: '#f5f5f5', padding: '12px', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(filteredByCategory, null, 2)}
-          </pre>
-        </section>
+      <Box sx={{display:"flex"}}>
+        <TextField
+            sx={{ mr: 1, mt:2, width: "100%", backgroundColor: "rgb(255, 255, 255)" }}
+            id="Ingredients-search"
+            label="Ingredients"
+            type="search"
+            variant="filled"
+            value={ingredientsFilter}
+            onChange={(e) => setIngredientsFilter(e.target.value)}
 
-        <section>
-          <h3>Favorites</h3>
-          <pre style={{ background: '#f5f5f5', padding: '12px', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(favoriteRecipes, null, 2)}
-          </pre>
-        </section>
+        />
 
-        <section>
-          <h3>Sorted by name</h3>
-          <pre style={{ background: '#f5f5f5', padding: '12px', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(sortedRecipes, null, 2)}
-          </pre>
-        </section>
-      </div>
+        <Button variant="contained" color="secondary" size="small" sx={{ mt: 2 }} onClick={handleAddIngredient}>
+            Add
+        </Button>
+    </Box>
+    <Box>
+      <p>List of Filter Ingredients:</p>
+      <p>
+          {ingredientsFilterList.map((ingredient) => (
+              <Chip
+                color="secondary"
+                key={ingredient}
+                label={ingredient}
+                onDelete={() => handleDeleteIngredient(ingredient)}
+                sx={{ mr: 1, mb: 1 }}
+            />
+          ))}
+        </p>
+    </Box>
+    <Box>
+        <p>Filter Results:</p>
+          <ul>
+            {filteredRecipes.map((recipe) => (
+                <li key={recipe.idMeal}>
+                {recipe.strMeal} -- 
+                {recipe.strCountry} --
+                Ingredients: 
+                {recipe.ingredientsList
+                  .map((ing) => ing.name + " (" + ing.measure + ")")
+                  .join(", ")}
+              </li>
+            ))}
+          </ul>
+          <hr></hr>
+      </Box>
 
-      <div style={{ marginTop: '16px' }}>
-        <button onClick={() => handleToggleFavorite('1')}>Toggle favorite for Spaghetti Carbonara</button>
-      </div>
     </div>
   );
 }

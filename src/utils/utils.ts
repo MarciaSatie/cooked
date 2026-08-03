@@ -1,12 +1,12 @@
 import type { CleanRecipe } from '../types/interfaces';
 
 /**
- * reorganise the information from API in a array of objects of ingredients {name, measure}
- * @param recipe type CleanRecipe : recipe object
- * @returns Array of (Ingredients) Objcts {name, measure}
+ * Formats recipe instructions into a cleaned array of individual instruction steps.
+ *
+ * @param recipe The recipe object whose instructions should be formatted.
+ * @returns An array of trimmed instruction steps, or an empty array if no instructions are available.
  */
-
-export function recipeInstructionsFormatter(recipe:CleanRecipe):string[]{
+export function recipeInstructionsFormatter(recipe: CleanRecipe): string[] {
     const instructions = recipe.strInstructions ?? '';
 
     if (!instructions.trim()) {

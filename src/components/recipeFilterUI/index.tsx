@@ -49,9 +49,6 @@ const RecipeFilterUI: React.FC<recipeFilterUIProps> = ({
     onIngredientChange,
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-
-    
-
     return (
         <>
             <Fab

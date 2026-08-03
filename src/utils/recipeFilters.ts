@@ -18,11 +18,9 @@ type RecipeFilters = {
  * @returns A new array containing only the recipes that match the supplied filters.
  */
 export function filterRecipes(recipes: CleanRecipe[], filters: RecipeFilters): CleanRecipe[] {
-  // Normalize the title filter so matching is case-insensitive.
-  const titleQuery = filters.titleFilter.trim().toLowerCase();
-
-  // Normalize the country filter so matching is case-insensitive.
-  const countryQuery = filters.countryFilter.trim().toLowerCase();
+ 
+  const titleQuery = filters.titleFilter.trim().toLowerCase(); // Normalize the title filter so matching is case-insensitive.
+  const countryQuery = filters.countryFilter.trim().toLowerCase();// Normalize the country filter so matching is case-insensitive.
 
   // Go through every recipe and keep only the ones that match all active filters.
   return recipes.filter((recipe) => {
@@ -36,7 +34,7 @@ export function filterRecipes(recipes: CleanRecipe[], filters: RecipeFilters): C
     // Otherwise, check whether at least one selected ingredient exists in the recipe.
     const matchesIngredients =
       filters.ingredientsFilterList.length === 0 ||
-      filters.ingredientsFilterList.some((selectedIngredient) =>
+      filters.ingredientsFilterList.every((selectedIngredient) =>
         // Search through the recipe ingredient list for a matching ingredient name.
         recipe.ingredientsList.some((ingredient) =>
           ingredient.name.toLowerCase().includes(selectedIngredient.toLowerCase())
