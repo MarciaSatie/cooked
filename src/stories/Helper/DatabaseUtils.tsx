@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
-import { Box, Button} from '@mui/material';
+import { Box, Button } from '@mui/material';
 import type { CleanRecipe } from "../../types/interfaces";
-import {AddRecipeToDataBase} from "../../supabase/database/utils"
-import { useAuth } from "../../supabase/auth";
+import { AddRecipeToDataBase } from "../../supabase/database/utils";
 
 const sampleRecipes: CleanRecipe[] = [
   {
@@ -17,7 +16,7 @@ const sampleRecipes: CleanRecipe[] = [
     strTags: null,
     strYoutube: null,
     ingredientsList: [{ name: "Pasta", measure: "200g" },{ name: "Tomato", measure: "4" }],
-    isFavorite: false,
+    isFavorite: true,
   },
   {
     idMeal: "2",
@@ -60,22 +59,28 @@ const sampleRecipes: CleanRecipe[] = [
   },
 ];
 
-const userID = "e0435dea-466d-41a7-9640-c335de2d95b0"
+type AddRecipeToDataBaseFn = typeof AddRecipeToDataBase;
 
-export function DatabaseUtils() {
-  const[message, setMessage] = useState("");
-  const[loading, setLoading] = useState(false);
-  const[responseData, setResponseData] = useState<any>(null);
+export interface DatabaseUtilsProps {
+  addRecipeToDataBase?: AddRecipeToDataBaseFn;
+}
+
+export function DatabaseUtils({
+  addRecipeToDataBase = AddRecipeToDataBase,
+}: DatabaseUtilsProps) {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [responseData, setResponseData] = useState<any>(null);
 
   const handleAddIngredient = async () => {
-    setLoading(true);
-    setMessage("");
-    setResponseData(null);
-
     try {
+      setLoading(true);
+      setMessage("");
+      setResponseData(null);
+
       setMessage("⏳ Adding recipe to database...");
-      const data = await AddRecipeToDataBase(userID, sampleRecipes[0]);
-      
+      const data = await addRecipeToDataBase(sampleRecipes[0]);
+
       setMessage("✅ Recipe added successfully!");
       setResponseData(data);
       console.log("Supabase Response:", data);
@@ -92,11 +97,11 @@ export function DatabaseUtils() {
   return (
     <div style={{ width: "720px", fontFamily: "sans-serif" }}>
       <Box sx={{ display: "flex" }}>
-        <Button 
-          variant="contained" 
-          color="secondary" 
-          size="small" 
-          sx={{ mt: 2 }} 
+        <Button
+          variant="contained"
+          color="secondary"
+          size="small"
+          sx={{ mt: 2 }}
           onClick={handleAddIngredient}
           disabled={loading}
         >
@@ -105,28 +110,36 @@ export function DatabaseUtils() {
       </Box>
 
       {message && (
-        <p style={{ 
-          marginTop: "16px", 
-          padding: "10px",
-          backgroundColor: message.includes("✅") ? "#e8f5e9" : message.includes("❌") ? "#ffebee" : "#fff3e0",
-          borderRadius: "4px",
-          fontWeight: "bold"
-        }}>
+        <p
+          style={{
+            marginTop: "16px",
+            padding: "10px",
+            backgroundColor: message.includes("✅")
+              ? "#e8f5e9"
+              : message.includes("❌")
+                ? "#ffebee"
+                : "#fff3e0",
+            borderRadius: "4px",
+            fontWeight: "bold",
+          }}
+        >
           {message}
         </p>
       )}
 
       {responseData && (
-        <div style={{ 
-          marginTop: "16px", 
-          padding: "10px",
-          backgroundColor: "#f5f5f5",
-          borderRadius: "4px",
-          fontFamily: "monospace",
-          fontSize: "12px",
-          maxHeight: "200px",
-          overflow: "auto"
-        }}>
+        <div
+          style={{
+            marginTop: "16px",
+            padding: "10px",
+            backgroundColor: "#f5f5f5",
+            borderRadius: "4px",
+            fontFamily: "monospace",
+            fontSize: "12px",
+            maxHeight: "200px",
+            overflow: "auto",
+          }}
+        >
           <strong>Response Data:</strong>
           <pre>{JSON.stringify(responseData, null, 2)}</pre>
         </div>

@@ -7,36 +7,25 @@ const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig();
 const supabase = createClient(supabaseUrl, supabasePublishableKey);
 
 // Call this when you want to favorite a recipe
-export async function AddRecipeToDataBase(userId: string, recipe: CleanRecipe) {
+export async function AddRecipeToDataBase(recipe: CleanRecipe) {
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr || !user) throw new Error("Not authenticated.");
+  
   const recipeId = String(recipe.idMeal);
-
-  // Destructure to remove frontend-only state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isFavorite, ...recipeDataToStore } = recipe;
 
-  console.log("📤 Sending to Supabase:", { userId, recipeId, recipe: recipeDataToStore });
-
   const { data, error } = await supabase
-  .from("favoriteRecipes")
-  .upsert({
-    user_id: userId,
-    recipe_id: recipeId,
-    recipe: recipeDataToStore,
-  }, { onConflict: 'user_id, recipe_id' }) // Matches your composite primary key
-  .select();
+    .from("favoriteRecipes")
+    .upsert(
+      {
+        user_id: user.id, // ✅ always present when authenticated
+        recipe_id: recipeId,
+        recipe: recipeDataToStore,
+      },
+      { onConflict: "user_id,recipe_id" }
+    )
+    .select();
 
-  console.log("📥 Supabase Response - Data:", data);
-  console.log("📥 Supabase Response - Error:", error);
-
-  if (error) {
-    console.error("❌ Supabase Error Details:", {
-      message: error.message,
-      code: error.code,
-      details: error.details,
-      hint: error.hint,
-    });
-    throw error;
-  }
-  
+  if (error) throw error;
   return data;
 }

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
+
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,16 +30,6 @@ export default function Signup() {
       return;
     }
   
-    // // Insert into your app table using the Auth UUID
-    // const { error: profileError } = await supabase
-    //   .from('profiles')
-    //   .insert({ id: user.id });
-  
-    // if (profileError) {
-    //   console.error('Profile insert failed:', profileError.message);
-    //   setMessage(profileError.message);
-    //   return;
-    // }
   
     console.log('User created:', user);
     setMessage('User created');

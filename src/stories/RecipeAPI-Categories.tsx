@@ -28,7 +28,7 @@ export function Categories() {
       />
        <p>Selected category is : {selectedCategory}</p>
 
-      
+      {/* pre: It is a built-in element used to display text exactly as it is written in your code, preserving both spaces and line breaks. */}
       <pre
         style={{
           background: '#f5f5f5',

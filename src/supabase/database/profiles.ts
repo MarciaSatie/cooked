@@ -22,7 +22,6 @@ export async function createProfile(user: User) {
     .insert({
       id: user.id,
       email: user.email,
-      created_at: new Date().toISOString(),
     })
     .select();
 
