@@ -29,16 +29,16 @@ export default function Signup() {
       return;
     }
   
-    // Insert into your app table using the Auth UUID
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({ id: user.id });
+    // // Insert into your app table using the Auth UUID
+    // const { error: profileError } = await supabase
+    //   .from('profiles')
+    //   .insert({ id: user.id });
   
-    if (profileError) {
-      console.error('Profile insert failed:', profileError.message);
-      setMessage(profileError.message);
-      return;
-    }
+    // if (profileError) {
+    //   console.error('Profile insert failed:', profileError.message);
+    //   setMessage(profileError.message);
+    //   return;
+    // }
   
     console.log('User created:', user);
     setMessage('User created');
