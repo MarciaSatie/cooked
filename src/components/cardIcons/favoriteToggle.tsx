@@ -6,6 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import type { SxProps, Theme } from "@mui/material/styles";
 import type { CleanRecipe } from "../../types/interfaces";
 import { RecipesContext } from "../../contexts/recipesContext";
+import { AddRecipeToDataBase } from "../../supabase/database/utils" 
 
 type FavoriteToggleProps = {
   recipe: CleanRecipe;
@@ -30,7 +31,7 @@ export default function FavoriteToggle({ recipe, sx }: FavoriteToggleProps) {
     ...(Array.isArray(sx) ? sx : sx ? [sx] : []), // it wraps your object in an array so the code can merge styles consistently.
   ];
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -40,6 +41,7 @@ export default function FavoriteToggle({ recipe, sx }: FavoriteToggleProps) {
     }
 
     addToFavourites(recipe);
+    await AddRecipeToDataBase(recipe);
   };
 
   return (

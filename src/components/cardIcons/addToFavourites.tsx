@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { RecipesContext } from "../../contexts/recipesContext";
 import type { CleanRecipe } from "../../types/interfaces"; // because of  tsconfig.app.json has verbatimModuleSyntax: true ; equires types to be imported with import type
-import { AddRecipeToDataBase } from "../../supabase/database/utils" 
+
 
 interface AddToFavouritesIconProps {
   recipe: CleanRecipe;
@@ -14,10 +14,17 @@ const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = ({ recipe }) => 
   const context = useContext(RecipesContext);
   const isFavourite = context.favourites.includes(recipe.idMeal);
 
-  const onUserSelect = (e: MouseEvent<HTMLButtonElement>) => {
+  const onUserSelect = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    e.stopPropagation();
+  
+    if (isFavourite) {
+      context.removeFromFavourites(recipe);
+      return;
+    }
+  
     context.addToFavourites(recipe);
-    AddRecipeToDataBase(recipe);
+    
   };
 
   return (

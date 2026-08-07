@@ -12,7 +12,7 @@ export async function AddRecipeToDataBase(recipe: CleanRecipe) {
   if (userErr || !user) throw new Error("Not authenticated.");
   
   const recipeId = String(recipe.idMeal);
-  const { isFavorite, ...recipeDataToStore } = recipe;
+  const { ...recipeDataToStore } = recipe;
 
   const { data, error } = await supabase
     .from("favoriteRecipes")

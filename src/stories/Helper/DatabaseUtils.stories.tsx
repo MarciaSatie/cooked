@@ -13,6 +13,8 @@ const meta: Meta<typeof DatabaseUtils> = {
 export default meta;
 type Story = StoryObj<typeof DatabaseUtils>;
 
+// Mock API lives in the story so Storybook can open without a real Supabase login.
+// DatabaseUtils.tsx stays reusable because the story passes the API in as a prop.
 const mockAddRecipeToDataBase = async (recipe: CleanRecipe) => [
   {
     id: 'mock-row-1',
