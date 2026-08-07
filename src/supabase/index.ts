@@ -1,3 +1,4 @@
 export { supabase } from './supabaseClient';
 export { AuthProvider, useAuth, AuthPage, Signup } from './auth';
-export { AddRecipeToDataBase } from './database/utils' 
+export { AddRecipeToDataBase } from './database/utils';
+export { createProfile, getProfile, updateProfile } from './database/profiles';
