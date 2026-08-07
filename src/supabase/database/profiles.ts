@@ -1,10 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
+import { getSupabaseConfig } from "../supabaseEnv";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-);
+const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig();
+
+const supabase = createClient(supabaseUrl, supabasePublishableKey);
 
 /**
  * Create a new profile entry when a user signs up
@@ -66,7 +66,7 @@ export async function getProfile(userId: string) {
  */
 export async function updateProfile(
   userId: string,
-  updates: { email?: string; [key: string]: any }
+  updates: { email?: string; [key: string]: unknown }
 ) {
   const { data, error } = await supabase
     .from("profiles")

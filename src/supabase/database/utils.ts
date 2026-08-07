@@ -1,10 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import type { CleanRecipe } from "../../types/interfaces";
+import { getSupabaseConfig } from "../supabaseEnv";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-);
+const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig();
+
+const supabase = createClient(supabaseUrl, supabasePublishableKey);
 
 // Call this when you want to favorite a recipe
 export async function AddRecipeToDataBase(userId: string, recipe: CleanRecipe) {
