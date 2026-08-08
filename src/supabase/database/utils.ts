@@ -29,3 +29,21 @@ export async function AddRecipeToDataBase(recipe: CleanRecipe) {
   if (error) throw error;
   return data;
 }
+
+
+export async function RemoveRecipeToDataBase(recipe: CleanRecipe) {
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr || !user) throw new Error("Not authenticated.");
+  
+  const recipeId = String(recipe.idMeal);
+
+  const { data, error } = await supabase
+    .from("favoriteRecipes")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("recipe_id", recipeId)
+    .select();
+
+  if (error) throw error;
+  return data;
+}

@@ -6,7 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import type { SxProps, Theme } from "@mui/material/styles";
 import type { CleanRecipe } from "../../types/interfaces";
 import { RecipesContext } from "../../contexts/recipesContext";
-import { AddRecipeToDataBase } from "../../supabase/database/utils" 
+import { AddRecipeToDataBase, RemoveRecipeToDataBase } from "../../supabase/database/utils" 
 
 type FavoriteToggleProps = {
   recipe: CleanRecipe;
@@ -37,6 +37,7 @@ export default function FavoriteToggle({ recipe, sx }: FavoriteToggleProps) {
 
     if (isFavourite) {
       removeFromFavourites(recipe);
+      await RemoveRecipeToDataBase(recipe);
       return;
     }
 
