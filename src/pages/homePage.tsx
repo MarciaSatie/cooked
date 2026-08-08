@@ -87,6 +87,7 @@ export default function Home() {
         onTitleChange={setTitleFilter}
         onCountryChange={setCountryFilter}
         onIngredientChange={setIngredientsFilter}
+        showIngredients={true}
       />
 
       <Divider sx={{ my: 3 }} /> 

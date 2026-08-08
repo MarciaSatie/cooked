@@ -33,6 +33,7 @@ interface recipeFilterUIProps {
     onTitleChange: (value: string) => void;
     onCountryChange: (value: string) => void;
     onIngredientChange: (value: string) => void;
+    showIngredients?: boolean;
 }
 
 
@@ -47,6 +48,7 @@ const RecipeFilterUI: React.FC<recipeFilterUIProps> = ({
     onTitleChange,
     onCountryChange,
     onIngredientChange,
+    showIngredients = true,
 }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     return (
@@ -87,42 +89,51 @@ const RecipeFilterUI: React.FC<recipeFilterUIProps> = ({
                             value={countryFilter}
                             onChange={(e) => onCountryChange(e.target.value)}
                         />
-                        <Box sx={{display:"flex"}}>
-                            <TextField
-                                sx={{ mr: 1, mt:2, width: "100%", backgroundColor: "rgb(255, 255, 255)" }}
-                                id="Ingredients-search"
-                                label="Ingredients"
-                                type="search"
-                                variant="filled"
-                                value={ingredientsFilter}
-                                onChange={(e) => onIngredientChange(e.target.value)}
-                            />
+                        {showIngredients && (
+                                                    <>
+                          <Box sx={{ display: "flex" }}>
+                              <TextField
+                                  sx={{ mr: 1, mt: 2, width: "100%", backgroundColor: "rgb(255, 255, 255)" }}
+                                  id="Ingredients-search"
+                                  label="Ingredients"
+                                  type="search"
+                                  variant="filled"
+                                  value={ingredientsFilter}
+                                  onChange={(e) => onIngredientChange(e.target.value)}
+                              />
 
-                            <Button variant="contained" color="secondary" size="small" sx={{ mt: 2 }} onClick={onAddIngredient}>
-                                Add
-                            </Button>
+                              <Button
+                                  variant="contained"
+                                  color="secondary"
+                                  size="small"
+                                  sx={{ mt: 2 }}
+                                  onClick={onAddIngredient}
+                              >
+                                  Add
+                              </Button>
+                          </Box>
 
-                        </Box>
-
-                        <Box sx={{ mt: 3 }}>
-                            {ingredientsFilterList.map((ingredient) => (
-                                <Chip
-                                    color="secondary"
-                                    key={ingredient}
-                                    label={ingredient}
-                                    onDelete={() => onDeleteIngredient(ingredient)}
-                                    sx={{ mr: 1, mb: 1 }}
-                                />
-                            ))}
-                        </Box>
+                          <Box sx={{ mt: 3 }}>
+                              {ingredientsFilterList.map((ingredient) => (
+                                  <Chip
+                                      color="secondary"
+                                      key={ingredient}
+                                      label={ingredient}
+                                      onDelete={() => onDeleteIngredient(ingredient)}
+                                      sx={{ mr: 1, mb: 1 }}
+                                  />
+                              ))}
+                          </Box>
+                                                    </>
+                        )}
 
                         <Box sx={{ mt: 2 }}>
                             <Button
                                 variant="text"
                                 onClick={() => {
-                                        onTitleChange("");
-                                        onCountryChange("");
-                                        onIngredientChange("");
+                                    onTitleChange("");
+                                    onCountryChange("");
+                                    onIngredientChange("");
                                     onClearIngredients();
                                 }}
                             >
