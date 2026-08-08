@@ -39,7 +39,7 @@ export async function RemoveRecipeToDataBase(recipe: CleanRecipe) {
 
   const { data, error } = await supabase
     .from("favoriteRecipes")
-    .delete()
+    .delete() //In Supabase, you do not pass the row data directly inside the .delete() function. Instead, you call .delete() with no arguments and chain a .eq() filter to specify which rows to delete.
     .eq("user_id", user.id)
     .eq("recipe_id", recipeId)
     .select();
