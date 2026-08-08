@@ -64,7 +64,7 @@ export default function CategoriesPage() {
     ingredientsFilterList,
   });
 
-  const totalRecipes = recipes.length;
+  const totalRecipes = filteredRecipes.length;
 
 
   return (
