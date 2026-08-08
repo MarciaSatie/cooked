@@ -93,11 +93,11 @@ export interface Recipe {
 }
 
 export interface Review {
+  recipeId: string;
+  authorId: string;
   author: string;
   content: string;
-  agree: boolean;
   rating: number;
-  recipeId: string;
 }
 
 export interface Category {

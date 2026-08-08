@@ -4,18 +4,14 @@ import { Alert, Box, Button, Rating, Snackbar, TextField, Typography } from "@mu
 import StarIcon from "@mui/icons-material/Star";
 import type { CleanRecipe, Review } from "../../types/interfaces";
 import { RecipesContext } from "../../contexts/recipesContext";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import RateReviewIcon from '@mui/icons-material/RateReview';
+
 
 type WriteReviewProps = {
   recipe: CleanRecipe;
 };
 
 
-export  function WriteReview({ recipe }: WriteReviewProps) {
+export default function WriteReview({ recipe }: WriteReviewProps) {
   const context = useContext(RecipesContext);
   // These state values store what the user types or selects in the form.
   const [author, setAuthor] = useState("");
@@ -49,11 +45,11 @@ export  function WriteReview({ recipe }: WriteReviewProps) {
     event.preventDefault();
 
     const review: Review = {
+      recipeId: recipe.idMeal,
+      authorId:"current-user-id",
       author,
       content,
-      agree: false,
       rating,
-      recipeId: recipe.idMeal,
     };
 
     context.addReview(recipe, review);
@@ -149,31 +145,3 @@ export  function WriteReview({ recipe }: WriteReviewProps) {
   );
 }
 
-export default function AccordionWriteReview({ recipe }: WriteReviewProps){
-  const id = React.useId(); // Needed for Accordion Component (mainly with multiples accordions)
-  return(
-    <>
-      <div>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ArrowDropDownIcon />}
-            aria-controls={`${id}-panel1-content`}
-            id={`${id}-panel1-header`}
-          >
-              <Typography component="span" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <RateReviewIcon color="primary" fontSize="large" />
-                {/* Page heading for the review form. */}
-                <Typography component="h2" variant="h5" sx={{ ml: 2 }}>
-                    Write a review
-                </Typography>
-              </Typography>
-          </AccordionSummary>
-
-          <AccordionDetails>
-            <WriteReview recipe={recipe} />
-          </AccordionDetails>
-        </Accordion>
-      </div>
-    </>
-  )
-}
