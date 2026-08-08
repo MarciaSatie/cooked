@@ -8,6 +8,7 @@ import type { CleanRecipe } from "../../types/interfaces";
 import { RecipesContext } from "../../contexts/recipesContext";
 import { AddRecipeToDataBase, RemoveRecipeToDataBase } from "../../supabase/database/utils" 
 
+
 type FavoriteToggleProps = {
   recipe: CleanRecipe;
   sx?: SxProps<Theme>;

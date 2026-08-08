@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
 import type { CleanRecipe, Review } from "../types/interfaces";
+import { useQueryGetFavoriteRecipesList } from "../hooks/useRecipes";
+
 
 interface recipeContextInterface {
   favourites: string[];
@@ -29,25 +31,34 @@ export const RecipesContext = React.createContext<recipeContextInterface>(
 const RecipesContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [favoriteRecipes, setFavoriteRecipes] = useState<CleanRecipe[]>([]);
+  const { recipes } = useQueryGetFavoriteRecipesList();
+  const [favoriteRecipesOverride, setFavoriteRecipesOverride] = useState<CleanRecipe[] | null>(null);
   const [mustWatch, setMustWatch] = useState<string[]>([]);
   const [, setMyReviews] = useState<Review[]>([]);
+
+  const favoriteRecipes = favoriteRecipesOverride ?? recipes;
+
   const favourites = favoriteRecipes.map((recipe) => recipe.idMeal);
 
   const addToFavourites = useCallback((recipe: CleanRecipe) => {
-    setFavoriteRecipes((prevFavoriteRecipes) => {
-      if (!prevFavoriteRecipes.some((savedRecipe) => savedRecipe.idMeal === recipe.idMeal)) {
-        return [...prevFavoriteRecipes, recipe];
+    setFavoriteRecipesOverride((prevFavoriteRecipes) => {
+      const currentFavoriteRecipes = prevFavoriteRecipes ?? recipes;
+
+      if (!currentFavoriteRecipes.some((savedRecipe) => savedRecipe.idMeal === recipe.idMeal)) {
+        return [...currentFavoriteRecipes, recipe];
       }
-      return prevFavoriteRecipes;
+
+      return currentFavoriteRecipes;
     });
-  }, []);
+  }, [recipes]);
 
   const removeFromFavourites = useCallback((recipe: CleanRecipe) => {
-    setFavoriteRecipes((prevFavoriteRecipes) =>
-      prevFavoriteRecipes.filter((savedRecipe) => savedRecipe.idMeal !== recipe.idMeal)
-    );
-  }, []);
+    setFavoriteRecipesOverride((prevFavoriteRecipes) => {
+      const currentFavoriteRecipes = prevFavoriteRecipes ?? recipes;
+
+      return currentFavoriteRecipes.filter((savedRecipe) => savedRecipe.idMeal !== recipe.idMeal);
+    });
+  }, [recipes]);
 
   const addToMustWatch = useCallback((recipe: CleanRecipe) => {
     setMustWatch((prevMustWatch) => {

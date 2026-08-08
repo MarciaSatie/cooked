@@ -11,6 +11,42 @@ import {
 } from "../api/recipes-api";
 import type { RecipesList, Recipe, CleanRecipe, Category } from "../types/interfaces";
 import { useQuery } from '@tanstack/react-query';
+import { fetchUserFavorites} from "../../api/custom-api";
+
+//#region Custom Queries
+export const useQueryGetFavoriteRecipesList = () => {
+  const {
+    data: recipes = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["favorite-recipes"],
+    queryFn: fetchUserFavorites,
+    /* select => takes the data after it coming from the database and changes it into the format page needs.
+    first, fetch the raw rows from Supabase
+    then, pick the recipe part from each row
+    then, give the page a clean list of recipes
+     */
+    select: (rows) => {
+      const recipes: CleanRecipe[] = [];
+
+      if (Array.isArray(rows)) {
+        for (const row of rows) {
+          if (row?.recipe) {
+            recipes.push(row.recipe as CleanRecipe);
+          }
+        }
+      }
+
+      return recipes;
+    },
+  });
+
+  return { recipes, isLoading, isError, error };
+};
+//#endrefion
+
 
 // #region Use Queries 
 /**

@@ -17,17 +17,17 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <RecipesContextProvider>
-          <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-            <Header title="Welcome to Cooked" />
-                <AppRoutes/>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RecipesContextProvider>
+            <BrowserRouter>
+              <Header title="Welcome to Cooked" />
+              <AppRoutes />
               <ReactQueryDevtools initialIsOpen={true} />
-            </QueryClientProvider>
-          </BrowserRouter>
-        </RecipesContextProvider>
-      </AuthProvider>
+            </BrowserRouter>
+          </RecipesContextProvider>
+        </AuthProvider>
+      </QueryClientProvider>
 
 
     </ThemeProvider>
