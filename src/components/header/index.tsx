@@ -33,7 +33,7 @@ export default function Header({ title }: HeaderProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"), { noSsr: true });
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
 
