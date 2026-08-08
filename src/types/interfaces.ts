@@ -97,7 +97,7 @@ export interface Review {
   content: string;
   agree: boolean;
   rating: number;
-  movieId: string;
+  recipeId: string;
 }
 
 export interface Category {

@@ -7,6 +7,8 @@ import Spinner from "../components/spinner";
 import GoToNextRecipe from "../components/cardIcons/goToNextRecipe";
 import GoToPreviousRecipe from "../components/cardIcons/goToPreviousRecipe";
 import { useQueryRecipeByID } from '../hooks/useRecipes'; 
+import RecipeReview from "../components/recipeReview";
+
 
 export default function RecipesDetailPage() {
   const { id } = useParams();
@@ -67,7 +69,7 @@ export default function RecipesDetailPage() {
             {tabValue === 0 && <RecipesDetail recipe={recipe} />}
 
             {/* Review Content Tab */}
-            {tabValue === 1 && <Box>In progress</Box>}
+            {tabValue === 1 && <Box><RecipeReview recipe={recipe} /></Box>}
           </Paper>
         </Container>
         </Box>
