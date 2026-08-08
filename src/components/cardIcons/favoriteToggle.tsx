@@ -14,6 +14,7 @@ type FavoriteToggleProps = {
 };
 
 export default function FavoriteToggle({ recipe, sx }: FavoriteToggleProps) {
+
   const { favourites, addToFavourites, removeFromFavourites } = useContext(RecipesContext);
   const isFavourite = favourites.includes(recipe.idMeal);
   const mergedSx = [
@@ -36,13 +37,14 @@ export default function FavoriteToggle({ recipe, sx }: FavoriteToggleProps) {
     event.stopPropagation();
 
     if (isFavourite) {
-      removeFromFavourites(recipe);
-      await RemoveRecipeToDataBase(recipe);
+      const updatedRecipeToFalse = { ...recipe, isFavorite: false };
+      removeFromFavourites(updatedRecipeToFalse);
+      await RemoveRecipeToDataBase(updatedRecipeToFalse);
       return;
     }
-
-    addToFavourites(recipe);
-    await AddRecipeToDataBase(recipe);
+    const updatedRecipe = { ...recipe, isFavorite: true };
+    addToFavourites(updatedRecipe);
+    await AddRecipeToDataBase(updatedRecipe);
   };
 
   return (

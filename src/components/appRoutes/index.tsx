@@ -5,6 +5,7 @@ import FavoritesPage from "../../pages/favoritesPage";
 import Home from "../../pages/homePage";
 import RecipesDetailPage from "../../pages/recipesDetailPage";
 import SurpriseMe from "../../pages/surpriseMe";
+import RecipeByIngredientPage from "../../pages/recipesByIngredient"
 
 
 export default function AppRoutes() {
@@ -41,6 +42,10 @@ export default function AppRoutes() {
       <Route
         path="/categories"
         element={user ? <CategoriesPage /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/recipeByIngredient"
+        element={user ? <RecipeByIngredientPage /> : <Navigate to="/" replace />}
       />
     </Routes>
   );

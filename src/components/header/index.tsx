@@ -37,6 +37,7 @@ export default function Header({ title }: HeaderProps) {
             <Button color="inherit" component={RouterLink} to="/home">Home</Button>
             <Button color="inherit" component={RouterLink} to="/surpriseMe">Surprise ME!</Button>
             <Button color="inherit" component={RouterLink} to="/categories">Categories</Button>
+            <Button color="inherit" component={RouterLink} to="/recipeByIngredient">Recipes By Ingredient</Button>
             <Button color="inherit" component={RouterLink} to="/favorites">Favorites</Button>
             <Button color="inherit" onClick={handleSignOut} title="Log out" endIcon={<LogoutIcon />}>
               Sign out

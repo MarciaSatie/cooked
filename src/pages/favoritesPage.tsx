@@ -34,10 +34,10 @@ export default function FavoritesPage() {
       } finally {
         setLoading(false);
       }
-      
+
     };
 
-    void loadFavorites();
+    loadFavorites();
   }, []);
 
   return (
