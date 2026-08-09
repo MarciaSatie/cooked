@@ -20,14 +20,14 @@ type Order = "asc" | "desc";
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Review | "contentPreview";
+  id: keyof Review;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   { id: "author", numeric: false, disablePadding: true, label: "Author" },
-  { id: "contentPreview", numeric: false, disablePadding: false, label: "Review Text" },
+  { id: "content", numeric: false, disablePadding: false, label: "Review Text" },
   { id: "rating", numeric: true, disablePadding: false, label: "Rating" },
 ];
 
@@ -55,13 +55,13 @@ function getComparator<Key extends PropertyKey>(
 
 function TableHeader(props: {
   order: Order;
-  orderBy: string;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Review | "contentPreview") => void;
+  orderBy: keyof Review;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Review) => void;
 }) {
   const { order, orderBy, onRequestSort } = props;
 
   const createSortHandler =
-    (property: keyof Review | "contentPreview") => (event: React.MouseEvent<unknown>) => {
+    (property: keyof Review) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -96,13 +96,13 @@ function TableHeader(props: {
 
 export default function ReviewTable({ reviewList = [] }: ReviewProps) {
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Review | "contentPreview">("author");
+  const [orderBy, setOrderBy] = React.useState<keyof Review>("author");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
-    property: keyof Review | "contentPreview",
+    property: keyof Review,
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -119,10 +119,7 @@ export default function ReviewTable({ reviewList = [] }: ReviewProps) {
   };
 
   const visibleRows = React.useMemo(
-    () =>
-      [...reviewList]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    () => [...reviewList].sort(getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [order, orderBy, page, rowsPerPage, reviewList],
   );
 
