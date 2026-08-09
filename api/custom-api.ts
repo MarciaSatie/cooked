@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "../src/supabase/supabaseEnv";
+import type { Review } from "../src/types/interfaces";
 
 const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig();
 const supabase = createClient(supabaseUrl, supabasePublishableKey);
@@ -18,7 +19,6 @@ export async function fetchUserFavorites() {
     // Stop early if the request is not authenticated.
     throw new Error("Not authenticated.");
   }
-
   // Call the SQL function that returns only this user's saved favorites.
   const { data, error } = await supabase.rpc("get_user_favorites", {
     logged_user_id: user.id,
@@ -29,4 +29,40 @@ export async function fetchUserFavorites() {
 
   // Return the favorite recipe rows from the database function.
   return data;
+}
+
+
+export async function addReview(
+  recipeID: string,
+  author: string,
+  content: string,
+  rating: number
+) {
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+
+  if (userErr || !user) {
+    throw new Error("Not authenticated.");
+  }
+
+  const { data, error } = await supabase.rpc("addReview", {
+    p_recipe_id: recipeID,
+    p_author_id: user.id,
+    p_author: author,
+    p_content: content,
+    p_rating: rating,
+  });
+
+  if (error) throw error;
+
+  return data; // true for success
+}
+
+export async function getReviewsByRecipeId(recipeId: string): Promise<Review[]> {
+  const { data, error } = await supabase.rpc<Review[]>("getReviewsByRecipe", {
+    p_recipe_id: recipeId,
+  });
+
+  if (error) throw error;
+
+  return data ?? [];
 }

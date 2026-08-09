@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from '@mui/material';
-import type { CleanRecipe, Review } from '../../types/interfaces';
+import type { CleanRecipe } from '../../types/interfaces';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -9,6 +9,7 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import WriteReview from "./writeReview";
 import ReviewTable from "./reviewTable"
+import { useQueryGetReviewsByRecipeId } from "../../hooks/useRecipes";
 
 
 
@@ -17,32 +18,13 @@ type RecipeReviewProps = {
   recipe: CleanRecipe;
 };
 
-const prototypeReviewList: Review[] = [
-  {
-    recipeId: "52772",
-    authorId: "author-1",
-    author: "Marcia",
-    content: "This recipe was easy to follow and tasted great.",
-    rating: 4.5,
-  },
-  {
-    recipeId: "52773",
-    authorId: "author-2",
-    author: "Alex",
-    content: "Very clear instructions, but I added extra seasoning.",
-    rating: 4,
-  },
-  {
-    recipeId: "52774",
-    authorId: "author-3",
-    author: "Sam",
-    content: "Nice idea, but I would reduce the cooking time a little.",
-    rating: 3.5,
-  },
-];
+
+
 
 export default function RecipeReview({ recipe }: RecipeReviewProps) {
   const id = React.useId(); // Needed for Accordion Component (mainly with multiples accordions)
+  
+  const reviews = useQueryGetReviewsByRecipeId(recipe.idMeal)
   return (
     <Box>
       <Accordion>
@@ -81,10 +63,10 @@ export default function RecipeReview({ recipe }: RecipeReviewProps) {
           </AccordionSummary>
 
           <AccordionDetails>
-            <ReviewTable reviewList={prototypeReviewList} />
+            <ReviewTable reviewList={reviews.reviews} />
           </AccordionDetails>
         </Accordion>
-   
+        <p>{reviews.error}</p>
     </Box>
   );
 }

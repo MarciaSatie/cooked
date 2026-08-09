@@ -13,7 +13,7 @@ import { visuallyHidden } from "@mui/utils";
 import type { Review } from "../../types/interfaces";
 
 type ReviewProps = {
-  reviewList: Review[];
+  reviewList?: Review[];
 };
 
 type Order = "asc" | "desc";
@@ -94,7 +94,7 @@ function TableHeader(props: {
   );
 }
 
-export default function ReviewTable({ reviewList }: ReviewProps) {
+export default function ReviewTable({ reviewList = [] }: ReviewProps) {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Review | "contentPreview">("author");
   const [page, setPage] = React.useState(0);

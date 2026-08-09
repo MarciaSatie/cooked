@@ -9,9 +9,9 @@ import {
   filterByIngredient,
   filterByArea
 } from "../api/recipes-api";
-import type { RecipesList, Recipe, CleanRecipe, Category } from "../types/interfaces";
+import type { RecipesList, Recipe, CleanRecipe, Category, Review } from "../types/interfaces";
 import { useQuery } from '@tanstack/react-query';
-import { fetchUserFavorites} from "../../api/custom-api";
+import { fetchUserFavorites,getReviewsByRecipeId} from "../../api/custom-api";
 
 //#region Custom Queries
 export const useQueryGetFavoriteRecipesList = () => {
@@ -20,7 +20,7 @@ export const useQueryGetFavoriteRecipesList = () => {
     isLoading,
     isError,
     error,
-  } = useQuery({
+  } = useQuery<CleanRecipe[]>({
     queryKey: ["favorite-recipes"],
     queryFn: fetchUserFavorites,
     /* select => takes the data after it coming from the database and changes it into the format page needs.
@@ -28,11 +28,11 @@ export const useQueryGetFavoriteRecipesList = () => {
     then, pick the recipe part from each row
     then, give the page a clean list of recipes
      */
-    select: (rows) => {
+    select: (rows: unknown) => {
       const recipes: CleanRecipe[] = [];
 
       if (Array.isArray(rows)) {
-        for (const row of rows) {
+        for (const row of rows as Array<{ recipe?: CleanRecipe }>) {
           if (row?.recipe) {
             recipes.push(row.recipe as CleanRecipe);
           }
@@ -45,6 +45,22 @@ export const useQueryGetFavoriteRecipesList = () => {
 
   return { recipes, isLoading, isError, error };
 };
+
+export const  useQueryGetReviewsByRecipeId = (recipeId:string) =>{
+  const {
+    data: reviews = [],
+    isLoading,
+    isError,
+    error,
+  }= useQuery<Review[]>({
+    queryKey: ["reviews", recipeId],
+    queryFn: () => getReviewsByRecipeId(recipeId),
+    enabled: !!recipeId,
+ 
+  });
+
+  return { reviews, isLoading, isError, error };
+}
 //#endrefion
 
 

@@ -92,7 +92,12 @@ export interface Recipe {
   strMeasure20?: string | null;
 }
 
+export interface ReviewList {
+  reviewList: Review[];
+}
+
 export interface Review {
+  id: string;
   recipeId: string;
   authorId: string;
   author: string;

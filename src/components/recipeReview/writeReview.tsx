@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import type { FormEvent } from "react";
 import { Alert, Box, Button, Rating, Snackbar, TextField, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import type { CleanRecipe, Review } from "../../types/interfaces";
-import { RecipesContext } from "../../contexts/recipesContext";
-
+import type { CleanRecipe} from "../../types/interfaces";
+import { addReview } from '../../../api/custom-api'
 
 type WriteReviewProps = {
   recipe: CleanRecipe;
@@ -12,7 +11,6 @@ type WriteReviewProps = {
 
 
 export default function WriteReview({ recipe }: WriteReviewProps) {
-  const context = useContext(RecipesContext);
   // These state values store what the user types or selects in the form.
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
@@ -20,6 +18,10 @@ export default function WriteReview({ recipe }: WriteReviewProps) {
   const [hover, setHover] = useState(-1);
   const [open, setOpen] = useState(false);
 
+  // For Success/Error Pop Message 
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+  const [snackSeverity, setSnackSeverity] = useState<"success" | "error">("success");
 
 
   // Labels shown under the star rating when the user hovers or selects a value.
@@ -41,26 +43,48 @@ export default function WriteReview({ recipe }: WriteReviewProps) {
   };
 
   // This runs when the user submits the review form.
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const review: Review = {
-      recipeId: recipe.idMeal,
-      authorId:"current-user-id",
-      author,
-      content,
-      rating,
-    };
+    try {
+      await addReview(recipe.idMeal, author, content, rating);
 
-    context.addReview(recipe, review);
-    setOpen(true);
-    setAuthor("");
-    setContent("");
-    setRating(3);
+      // For Success/Error Pop Message 
+      setSnackSeverity("success");
+      setSnackMessage("Review submitted successfully.");
+      setSnackOpen(true);
+
+      // Return fields to default state
+      setAuthor("");
+      setContent("");
+      setRating(3);
+      setHover(-1);
+    } catch (error) {
+      setSnackSeverity("error");
+      setSnackMessage(
+        error instanceof Error ? error.message : "Failed to submit review."
+      );
+      setSnackOpen(true);
+    }
   };
+
 
   return (
     <Box component="div" sx={{ mt: 2, width:"80%", mx:"auto" }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackOpen(false)}
+      >
+        <Alert
+          severity={snackSeverity}
+          variant="filled"
+          onClose={() => setSnackOpen(false)}
+        >
+          <Typography variant="h6">{snackMessage}</Typography>
+        </Alert>
+      </Snackbar>
 
       {/* Success message shown after the review is submitted. */}
       <Snackbar
