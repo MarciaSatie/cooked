@@ -66,3 +66,16 @@ export async function getReviewsByRecipeId(recipeId: string): Promise<Review[]> 
 
   return data ?? [];
 }
+
+// function to handle the GitHub sign-in trigger
+export async function signInWithGitHub() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: 'https://cooked-kgtd.vercel.app/', // Your live Vercel URL
+    },
+  })
+  if (error) throw error;
+
+  return data;
+}
