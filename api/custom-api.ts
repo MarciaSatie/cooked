@@ -58,7 +58,7 @@ export async function addReview(
 }
 
 export async function getReviewsByRecipeId(recipeId: string): Promise<Review[]> {
-  const { data, error } = await supabase.rpc<Review[]>("getReviewsByRecipe", {
+  const { data, error } = await supabase.rpc("getreviewsbyrecipe", {
     p_recipe_id: recipeId,
   });
 

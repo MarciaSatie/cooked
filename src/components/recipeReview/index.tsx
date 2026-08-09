@@ -66,7 +66,7 @@ export default function RecipeReview({ recipe }: RecipeReviewProps) {
             <ReviewTable reviewList={reviews.reviews} />
           </AccordionDetails>
         </Accordion>
-        <p>{reviews.error}</p>
+        <p>{reviews.isError ? String(reviews.error) : ""}</p>
     </Box>
   );
 }

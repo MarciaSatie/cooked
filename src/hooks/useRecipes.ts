@@ -46,21 +46,20 @@ export const useQueryGetFavoriteRecipesList = () => {
   return { recipes, isLoading, isError, error };
 };
 
-export const  useQueryGetReviewsByRecipeId = (recipeId:string) =>{
+export const useQueryGetReviewsByRecipeId = (recipeId: string) => {
   const {
     data: reviews = [],
     isLoading,
     isError,
     error,
-  }= useQuery<Review[]>({
+  } = useQuery<Review[]>({
     queryKey: ["reviews", recipeId],
     queryFn: () => getReviewsByRecipeId(recipeId),
     enabled: !!recipeId,
- 
   });
 
   return { reviews, isLoading, isError, error };
-}
+};
 //#endrefion
 
 

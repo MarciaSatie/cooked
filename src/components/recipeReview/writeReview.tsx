@@ -5,6 +5,7 @@ import StarIcon from "@mui/icons-material/Star";
 import type { CleanRecipe} from "../../types/interfaces";
 import { addReview } from '../../../api/custom-api'
 
+
 type WriteReviewProps = {
   recipe: CleanRecipe;
 };
@@ -65,6 +66,7 @@ export default function WriteReview({ recipe }: WriteReviewProps) {
         error instanceof Error ? error.message : "Failed to submit review."
       );
       setSnackOpen(true);
+
     }
   };
 
