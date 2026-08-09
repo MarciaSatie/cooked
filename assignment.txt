@@ -1,0 +1,23 @@
+Assignment Submission
+Student: Marcia Satie Nishizaki
+Student ID: W20114821
+
+Specifications:
+
+1. GitHub repository URL: https://github.com/MarciaSatie/cooked.git
+2. Vercel deployment URL: https://cooked-kgtd.vercel.app/
+3. YouTube demo video URL: 
+4. AI Reference URL: https://www.google.com/search?sourceid=chrome&ie=UTF-8&amc=1&cud=0&atvm=2&ved=0CAQQ2_wOahcKEwiAuZ6QtZSWAxUAAAAAHQAAAAAQDA&udm=50&elids=CMfa4onkicycuQEQARgBIhC655TZIoB9EiVQhlXP1O-9MoEBIgJkaCgJQnMKLmxmZS1kdW1teTo0NzMwYmFmZi1jNzlkLTQ2ZTgtOTIxMS0zMGUxNGIyNjMzYzESQQo_L2Jucy9kaC9ib3JnL2RoL2Jucy9sZW5zLWZyb250ZW5kLWFwaS9wcm9kLmxlbnMtZnJvbnRlbmQtYXBpLzQ5WgQKAmRoOJjRnYyslJYDUABqCWltYWdlL3BuZw&mstk=AUtExfDONJtaZS8m4qAVOnWh4YOldj0Y4gIDHAS0uB_WlFD78LJeRQ_kxffriCPFnVfpUfJJ93O64Kr47BUqmX7fizbebMkJXsPrPMqJx-XftU3fMCEbTmjGaeL5MrsA8sA2AUNJcUKgVpT6pTP_P6Jq3Flk_w5wfJjMGQOP1BjjEXYxCCHvSM5tnjK9uBhO9mU4u1Isw9GDSdlrAsepXMwVJpbNejvDwev2A_RBp0Dhb-PXwrHFanRvyBuiJS0piRbaP1oz3m2sc6Mdmx-Fp-i6mgYd3mNBfoEc9GkZeFWzPxyza1djsWB2XgUtiVxL9wf6GuyoWnwoZmZpQFUNLzqtH122k3oH1eCcUA&mtid=jdplas-BO4rqhbIPu4OHqAE&csuir=1&aep=26&q=Using+React+with+typescript%0Arefresh+me+how+to+grab+a+param%2C+at+this+case+ID+from+url
+
+5. Short project summary
+Cooked api, is a React Vite + typescript project that fetches API calls from TheMealDB.
+The user can visualize cards with recipes by alphabetic order, categorym ingriendients and more.
+
+6. Authentication is made by Supabase Authentication by Email or github
+
+7. Storybook stories it was used to text API calls from TheMealDB, vizualizing the json reponse, 
+for better visualization of how the helper functions are returning the data.
+
+8. Use of Vite, Material UI, React Router, React Query, Context.
+
+9. Each page allows Pagination and Filter.

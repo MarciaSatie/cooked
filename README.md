@@ -1,37 +1,55 @@
 # Cooked App
 
-[Cooked -Vercel Web App](https://cooked-kgtd.vercel.app)
+Cooked App is a React + TypeScript recipe explorer built with Vite, Material UI, React Router, React Query, and Supabase. It uses TheMealDB as the recipe data source and Supabase for Authentication and storing user favourites.
 
-Cooked App is a small React + TypeScript project for exploring recipe data from TheMealDB API. It fetches recipe information by ID, transforms the raw API response into a cleaner shape, and displays the result in a card-based UI.
+Live demo: https://cooked-kgtd.vercel.app
 
-## Main Features
+Source repository: https://github.com/MarciaSatie/cooked
 
-- Fetches recipe data from TheMealDB by recipe ID
-- Transforms raw API data into a cleaned recipe model
-- Displays recipe details in a responsive card layout
-- Shows ingredients and measurements in a readable format
-- Includes Storybook stories for UI testing
-- Includes JSDoc output for code documentation
+## Overview
+
+The application lets signed-in users browse recipes by:
+- category, 
+- ingredient, 
+- random selection,
+- allows Filter recipes by Name, Country and Ingridients,
+- opens recipe detail pages, showing Recipe's information, images or videos and Reviews,
+- allows to add and visualize Reviews per Recipe,
+- and saves favourites recipes . 
+- It also includes Storybook stories and generated JSDoc documentation for the main API and data modules.
+
+## Features
+
+- Email/password authentication with Supabase
+- GitHub sign-in through Supabase OAuth
+- Recipe browsing pages for home (recipesAtoZ`), categories, surprise me, favourites, and recipes by ingredient, and pagination
+- Parameterised Recipe Detail route at `/recipesAtoZ/:id`
+- Recipe details with ingredients, instructions, and embedded media when available
+- Recipe details with Review Page, allowing to add a Review and View.
+- Favourite recipes and Reviews stored per user in Supabase
+- React Query caching for server state
+- Storybook stories for component and API-driven and test Helper functionalities
+- JSDoc documentation for the codebase
+
+## Data Sources
+
+- TheMealDB API for recipe, category, ingredient, and random recipe data
+- Supabase Auth for user accounts
+- Supabase database tables for profiles and favourite recipes
 
 ## Tech Stack
 
-- React
+- React 19
 - TypeScript
 - Vite
+- React Router
+- TanStack React Query
+- Supabase
 - Material UI
 - Storybook
 - JSDoc
 
-## Project Structure
-
-- `src/api` - API calls
-- `src/hooks` - reusable data hooks
-- `src/components` - UI components
-- `src/pages` - app pages
-- `src/stories` - Storybook stories
-- `src/types` - shared TypeScript interfaces
-
-## Main Commands
+## Setup
 
 Install dependencies:
 
@@ -39,7 +57,16 @@ Install dependencies:
 npm install
 ```
 
-Run the app:
+Create a `.env` file with these values:
+
+```bash
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
+
+`VITE_SUPABASE_ANON_KEY` is also supported as a fallback if you prefer that name.
+
+Run the app locally:
 
 ```bash
 npm run dev
@@ -51,29 +78,49 @@ Run Storybook:
 npm run storybook
 ```
 
-Generate JSDoc docs:
+Generate the JSDoc site:
 
 ```bash
 npm run docs
 ```
 
-Open the generated JSDoc site:
+Open the generated docs:
 
 ```bash
 npm run docs:open
 ```
 
-Build the app for production:
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-## API Reference
 
-[TheMealDB API](https://www.themealdb.com/api.php)
 
-[AI chat research history](https://www.google.com/search?q=Using+React+with+typescript%0Arefresh+me+how+to+grab+a+param%2C+at+this+case+ID+from+url&sourceid=chrome&ie=UTF-8&amc=1&aep=42&cud=1&source=chrome.crn.rb&atvm=2&udm=50&mstk=AUtExfAZvZMEK3_ajyxFfYXe7OARx7Irx1p4O7F_Rkrol316ZxFTuKIUJs6MaW0oaeFhAr8aoAJoM6QjoeVBWe8WbDHIXv7_U3w--zbKQf_Ia-ebloGl7woDnDW48eaSFxmG0W3iE10h-iKW25xeFyUJjVZRsn0O2TAwDRBnY8aSOgLL4Z22JI9U4YNj9U3_b3a302oMCJHbot2xxA02yttz9gZJrbrmJTVMLYLp0lYnMyRIMG8eYKBH8DuqMEEiSPApwl9K1oXt7CpRTMjdMEewA0jEGgEuxmg4boE&csuir=1&mtid=jdplas-BO4rqhbIPu4OHqAE)
+## Project Structure
+
+- `src/api` - MealDB API wrappers and custom API helpers
+- `src/components` - navigation, recipe cards, detail views, filters, and reusable UI
+- `src/contexts` - shared application context
+- `src/hooks` - data fetching hooks built on React Query and custom state logic
+- `src/pages` - routed pages for the app experience
+- `src/stories` - Storybook stories and supporting examples
+- `src/supabase` - Supabase client, auth, and database helpers
+- `src/types` - shared TypeScript interfaces and API models
+- `src/utils` - recipe transformation and filtering helpers
+
+## Routes
+
+- `/` - sign-in page
+- `/sign-up` - registration page
+- `/home` - main recipe landing page
+- `/surpriseMe` - random recipe view
+- `/favorites` - saved recipes
+- `/recipesAtoZ/:id` - recipe detail page
+- `/categories` - recipes by category
+- `/recipeByIngredient` - recipes by ingredient
+
 
 
 
