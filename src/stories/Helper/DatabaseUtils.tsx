@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import { Box, Button } from '@mui/material';
 import type { CleanRecipe } from "../../types/interfaces";
@@ -70,6 +69,7 @@ export function DatabaseUtils({
 }: DatabaseUtilsProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [responseData, setResponseData] = useState<any>(null);
 
   const handleAddIngredient = async () => {
