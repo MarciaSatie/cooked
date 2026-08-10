@@ -2,62 +2,64 @@
 // src/chatbot/ChatWidget.tsx
 import React, { useState } from 'react';
 import { useChat } from '@ai-sdk/react'; // Clean v7 submodule React hook package
-import { DefaultChatTransport } from 'ai'; // Modern required network streaming transport abstraction layer
 import { Box, TextField, Button, Paper, Typography, Stack, Fab, Collapse } from '@mui/material';
-
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import myLogo from "../assets/chef-hat.png"; 
-export default function ChatWidget() {
-  // 1. LOCAL STATE CONTROL
-  // Tracks if the Material UI card bubble window is open or shut
-  const [isOpen, setIsOpen] = useState(false);
-  // Captures what the user types inside the chat form input text row
-  const [localInput, setLocalInput] = useState(''); 
+import { DefaultChatTransport } from 'ai'; // Modern required network transport layer
 
-  // 2. THE SEAMLESS TRANSFERS V7 HOOK
-  // We use the mandatory transport option block container to clear the red 'api' error
+export default function ChatWidget() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [localInput, setLocalInput] = useState(''); 
+  
+
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-      api: '/api/chat', 
+      // 💡 This web URL communicates with the exact same Groq SDK servers behind the scenes!
+      api: 'https://groq.com',
+      headers: {
+        'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: {
+        model: 'llama-3.1-8b-instant', // Free workhorse model
+        stream: true, // Crucial for real-time word-by-word printing
+      }
     }),
   });
 
-  // 3. RUNTIME ACTIVITY SNAPS
-  // Checks if the pipeline is submitted or streaming tokens out to the user interface
+
   const isLoading = status === 'submitted' || status === 'streaming';
 
-  // 4. MESSAGE SUBMIT BUTTON EVENT HANDLER
   const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Stifles default browser reloading loops
+    e.preventDefault(); 
     if (!localInput.trim() || isLoading) return;
 
-    // Direct fire step that handles parsing string packages over into the stream
     sendMessage({ text: localInput });
-    setLocalInput(''); // Resets the input view layer clean instantly
+    setLocalInput(''); 
   };
+
 
   return (
     <Box sx={{ position: 'fixed', bottom: 100, right: 20, zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
       
-      {/* 5. SLIDE ACCORDION CHAT CABINET */}
+      {/* SLIDE COLLAPSE OVERLAY MAIN DRAW CABINET */}
       <Collapse in={isOpen}>
         <Paper elevation={6} sx={{ width: 360, height: 460, display: 'flex', flexDirection: 'column', p: 2, mb: 2, borderRadius: 3 }}>
           
-          {/* HEADER EMBLEM */}
+          {/* HEADER TITLE */}
           <Typography variant="h6" sx={{ borderBottom: '1px solid #eee', pb: 1, mb: 1, fontWeight: 'bold' }}>
             🧑‍🍳 Cooked Assistant
           </Typography>
           
-          {/* 6. MESSAGES RENDER FRAME LAYER */}
+          {/* MESSAGES LAYER MAP CONTAINER */}
           <Stack spacing={1.5} sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, pr: 0.5 }}>
-            {/* 💡 FIX: Wrapped the eslint comment correctly inside JSX curly braces */}
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {messages.map((m: any) => (
               <Box
                 key={m.id}
                 sx={{
-                  // Flips response positioning fields right/left based on role flags
+                  // Automatically positions user boxes on the right, and bot answers on the left
                   alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                   backgroundColor: m.role === 'user' ? 'primary.main' : 'grey.100',
                   color: m.role === 'user' ? 'white' : 'text.primary',
@@ -66,9 +68,7 @@ export default function ChatWidget() {
                   maxWidth: '80%',
                 }}
               >
-                {/* 7. SECURED HYBRID PARSE CHECK LAYER */}
-                {/* By forcing an 'any' type conversion check sequence line, we can securely use */}
-                {/* fallback checks like m.text or m.content without throwing compiler crashes! */}
+                {/* MODERN PARSE TEXT BLOCK LOOP */}
                 <Typography variant="body2">
                   {m.parts
                     ? m.parts.map((part: any, idx: number) => (part.type === 'text' ? <span key={idx}>{part.text}</span> : null))
@@ -78,7 +78,7 @@ export default function ChatWidget() {
             ))}
           </Stack>
 
-          {/* 8. MATERIAL INTERFACE CONTAINER CONTROL */}
+          {/* INPUT BAR BOX ACTION CONTROL PANEL */}
           <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', gap: 1 }}>
             <TextField
               fullWidth
@@ -95,24 +95,22 @@ export default function ChatWidget() {
         </Paper>
       </Collapse>
 
-      {/* 9. TRIGGER BUTTON FAB */}
+      {/* ROUND ACTION INTERACTIVE BUBBLE BUTTON */}
       <Fab color="primary" onClick={() => setIsOpen(!isOpen)}>
-      {isOpen ? (
-        // This displays when the chat drawer window layout is open
-        <CloseIcon />
-      ) : (
-        // 💡 FIX: Replaced the placeholder "/logo.png" string with your imported variable {myLogo}
-        <Box 
-          component="img"
-          src={myLogo} 
-          alt="App Logo"
-          sx={{ 
-            width: 32,    // Adjust the width sizing to look clean inside the circle
-            height: 32,   // Adjust the height sizing to match perfectly
-            objectFit: 'contain'
-          }}
-        />
-      )}
+        {isOpen ? (
+          <CloseIcon />
+        ) : (
+          <Box 
+            component="img"
+            src={myLogo} 
+            alt="App Logo"
+            sx={{ 
+              width: 32,    
+              height: 32,   
+              objectFit: 'contain'
+            }}
+          />
+        )}
       </Fab>
     </Box>
   );
