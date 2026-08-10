@@ -39,11 +39,11 @@ export async function handleChat(userMessage: string) {
   // We use streamText instead of generateText + Output.object
   const result = await streamText({
     model: customGroqProvider('llama-3.3-70b-versatile'),
-    system: 'You are a helpful culinary assistant named ChefBot. You can chat normally or provide cooking advice.',
+    system: 'You are a helpful Chef named ChefBot. You can chat normally or provide cooking advice.',
     prompt: userMessage,
   });
 
-  // Returns a stream context that your frontend can read token-by-token
+  // Returns a stream context
   return result.toTextStreamResponse();
 }
 

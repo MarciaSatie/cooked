@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import myLogo from "../assets/chef-hat.png"; 
 import { DefaultChatTransport } from 'ai'; // Modern required network transport layer
+import { generateRecipe } from '../../../api/chat';
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
