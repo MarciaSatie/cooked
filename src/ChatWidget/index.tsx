@@ -56,7 +56,7 @@ export default function ChatWidget() {
       
       {/* SLIDE COLLAPSE OVERLAY MAIN DRAW CABINET */}
       <Collapse in={isOpen}>
-        <Paper elevation={6} sx={{ width: 600, height: 800, display: 'flex', flexDirection: 'column', p: 2, mb: 2, borderRadius: 3 }}>
+        <Paper elevation={6} sx={{ width: 400, height: 600, display: 'flex', flexDirection: 'column', p: 2, mb: 2, borderRadius: 3 }}>
           
           {/* HEADER TITLE */}
           <Typography variant="h6" sx={{ borderBottom: '1px solid #eee', pb: 1, mb: 1, fontWeight: 'bold' }}>
