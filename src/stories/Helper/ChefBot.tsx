@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { generateRecipe, handleChat } from '../../../api/chat';
+import { generateRecipe, streamDecoder } from '../../../api/chat';
 
 interface RecipeState {
   recipe: {
@@ -57,33 +57,14 @@ export function ChefBot() {
     setIsChatLoading(true);
 
     try {
-      // 2. Fetch the text response stream context from your backend file
-      const response = await handleChat(userText);
-      if (!response.body) throw new Error("No response stream");
+      // Fetch the text response stream context from your backend file and Decode it.
+      // Return teh string message.
+      const response = await streamDecoder(userText);
 
-      // 3. Set up a fresh message slot for the AI response
+      // Set up a fresh message slot for the AI response
       const assistantMessageId = (Date.now() + 1).toString();
-      setMessages((prev) => [...prev, { id: assistantMessageId, role: 'assistant', content: '' }]);
+      setMessages((prev) => [...prev, { id: assistantMessageId, role: 'assistant', content: response }]);
 
-      // 4. Decode the chunks token-by-token
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let fullContent = '';
-
-      while (!done) {
-        const { value, done: chunkDone } = await reader.read();
-        done = chunkDone;
-        const chunk = decoder.decode(value || new Uint8Array(), { stream: !done });
-        fullContent += chunk;
-
-        // 5. Update only the latest assistant message bubble smoothly
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === assistantMessageId ? { ...msg, content: fullContent } : msg
-          )
-        );
-      }
     } catch (err) {
       console.error("Streaming error:", err);
       setMessages((prev) => [

@@ -1,79 +1,90 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/chatbot/ChatWidget.tsx
 import React, { useState } from 'react';
-import { useChat } from '@ai-sdk/react'; // Clean v7 submodule React hook package
 import { Box, TextField, Button, Paper, Typography, Stack, Fab, Collapse } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import myLogo from "../assets/chef-hat.png"; 
-import { DefaultChatTransport } from 'ai'; // Modern required network transport layer
-import { generateRecipe } from '../../../api/chat';
+import { streamDecoder } from '../../api/chat'; 
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [localInput, setLocalInput] = useState(''); 
   
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      // 💡 This web URL communicates with the exact same Groq SDK servers behind the scenes!
-      api: 'https://groq.com',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: {
-        model: 'llama-3.1-8b-instant', // Free workhorse model
-        stream: true, // Crucial for real-time word-by-word printing
-      }
-    }),
-  });
-
-
-  const isLoading = status === 'submitted' || status === 'streaming';
-
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
-    if (!localInput.trim() || isLoading) return;
+    const userText = localInput.trim(); // User Input
+    if (!userText || isLoading) return;
 
-    sendMessage({ text: localInput });
+    //  append user message data to messages Array
+    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: userText };
+    setMessages((prev) => [...prev, userMessage]); // using spread operator to add last object to messages Array
     setLocalInput(''); 
-  };
+    setIsLoading(true);
 
+    try {
+      // Fetch the text response stream context from your backend file and Decode it.
+      // Return teh string message.
+      const response = await streamDecoder(userText);
+
+      // Set up a fresh message slot for the AI response
+      const assistantMessageId = (Date.now() + 1).toString();
+      setMessages((prev) => [...prev, { id: assistantMessageId, role: 'assistant', content: response }]);
+
+    }catch (err) {
+      console.error("Widget chat stream failure:", err);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now().toString(), role: 'assistant', content: "Failed to load chat stream response." }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box sx={{ position: 'fixed', bottom: 100, right: 20, zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
       
       {/* SLIDE COLLAPSE OVERLAY MAIN DRAW CABINET */}
       <Collapse in={isOpen}>
-        <Paper elevation={6} sx={{ width: 360, height: 460, display: 'flex', flexDirection: 'column', p: 2, mb: 2, borderRadius: 3 }}>
+        <Paper elevation={6} sx={{ width: 600, height: 800, display: 'flex', flexDirection: 'column', p: 2, mb: 2, borderRadius: 3 }}>
           
           {/* HEADER TITLE */}
           <Typography variant="h6" sx={{ borderBottom: '1px solid #eee', pb: 1, mb: 1, fontWeight: 'bold' }}>
-            🧑‍🍳 Cooked Assistant
+            🧑‍🍳 Chef Bot
           </Typography>
           
           {/* MESSAGES LAYER MAP CONTAINER */}
           <Stack spacing={1.5} sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, pr: 0.5 }}>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {messages.map((m: any) => (
+            {messages.length === 0 && (
+              <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', mt: 4 }}>
+                No messages yet. Ask me any cooking question!
+              </Typography>
+            )}
+            {messages.map((m) => (
               <Box
                 key={m.id}
                 sx={{
-                  // Automatically positions user boxes on the right, and bot answers on the left
                   alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                   backgroundColor: m.role === 'user' ? 'primary.main' : 'grey.100',
                   color: m.role === 'user' ? 'white' : 'text.primary',
                   p: 1.2,
                   borderRadius: 2,
                   maxWidth: '80%',
+                  whiteSpace: 'pre-wrap'
                 }}
               >
-                {/* MODERN PARSE TEXT BLOCK LOOP */}
                 <Typography variant="body2">
-                  {m.parts
-                    ? m.parts.map((part: any, idx: number) => (part.type === 'text' ? <span key={idx}>{part.text}</span> : null))
-                    : (m.text || m.content || "")}
+                  {m.content}
                 </Typography>
               </Box>
             ))}
