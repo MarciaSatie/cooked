@@ -66,6 +66,13 @@ export async function handleChat(userMessage: string) {
   return result.toTextStreamResponse();
 }
 
+/**
+ * Sends a user message to ChefBot and streams the AI reply back.
+ * Decode the Stream Response provided by AI and Decode it (byte-by-bite) to a String Message. 
+ * @param userMessage - The message from the user.
+ * @returns - Ai's Reponse Message in String Type.
+ */
+
 export async function streamDecoder (userMessage: string ) {
     // Fetch the text response stream context from your backend file
     const response = await handleChat(userMessage);
