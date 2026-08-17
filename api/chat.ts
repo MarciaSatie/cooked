@@ -1,7 +1,7 @@
 import { createGroq } from '@ai-sdk/groq'; // 1. Change groq to createGroq
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
-import { streamText } from 'ai';
+import { streamText  } from 'ai';
 
 // Reference https://ai-sdk.dev/providers/ai-sdk-providers/groq
 
@@ -15,7 +15,7 @@ const RecipeSchema = z.object({
 
 type RecipeOutput = z.infer<typeof RecipeSchema>;
 
-// 2. Initialize your custom provider instance with your Vite environment variable
+// Initialize your custom provider instance with your Vite environment variable
 const customGroqProvider = createGroq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
 });
@@ -33,6 +33,7 @@ export async function generateRecipe(prompt: string = 'Generate a simple pasta r
     return result.output;
   }
 
+  
 
  
 // Reference: https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text
@@ -50,13 +51,13 @@ export async function generateRecipe(prompt: string = 'Generate a simple pasta r
  * 1- response.body is a ReadableStream<Uint8Array> (a stream of raw binary numbers).
  * 
  * 2- reader.read() pulls out those individual binary chunks one at a time.
- * 
+ *
  * 3- TextDecoder finally converts those binary chunks into the strings that you append to your chat UI.
 */
 export async function handleChat(userMessage: string) {
   // We use streamText instead of generateText + Output.object
   const result = await streamText({
-    model: customGroqProvider('llama-3.3-70b-versatile'),
+    model: customGroqProvider('openai/gpt-oss-20b'), 
     system: 'You are a helpful Chef named ChefBot. You can chat normally or provide cooking advice in short and organized way .',
     prompt: userMessage,
   });
@@ -65,6 +66,31 @@ export async function handleChat(userMessage: string) {
   // a stream context manages the data bit-by-bit while holding the configuration details for that connection.
   return result.toTextStreamResponse();
 }
+
+
+// // Next.js automatically loads this securely on the server
+// const customGroqProvider2 = createGroq({
+//   apiKey: process.env.GROQ_API_KEY, 
+// });
+
+// export async function POST(req: Request) {
+//   try {
+//     // The useChat hook automatically sends an array of 'messages'
+//     const { messages } = await req.json();
+
+//     const result = await streamText({
+//       model: customGroqProvider2('llama-3.1-8b-instant'),
+//       system: 'You are a helpful Chef named ChefBot. You can chat normally or provide cooking advice in short and organized way.',
+//       messages: messages, // Pass the whole history so the bot remembers context
+//     });
+
+//     return result.toTextStreamResponse();
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (error: any) {
+//     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+//   }
+// }
+
 
 /**
  * Sends a user message to ChefBot and streams the AI reply back.
