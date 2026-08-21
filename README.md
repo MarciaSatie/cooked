@@ -29,7 +29,10 @@ The application lets signed-in users browse recipes by:
 - Favourite recipes and Reviews stored per user in Supabase
 - React Query caching for server state
 - Storybook stories for component and API-driven and test Helper functionalities
-- JSDoc documentation for the codebase
+- JSDoc documentation for the codebase.
+
+## Extra Feature
+- Ai chat bot (Chefbot) using openai/gpt-oss-20b. (Current just working at Localhost)
 
 ## Data Sources
 

@@ -15,7 +15,7 @@ interface Message {
 }
 
 export default function ChatWidget() {
-  const { user, signOut } = useAuth();
+  const { user, } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [localInput, setLocalInput] = useState(''); 
   

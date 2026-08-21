@@ -1,4 +1,4 @@
-import { createGroq } from '@ai-sdk/groq'; // 1. Change groq to createGroq
+import { createGroq } from '@ai-sdk/groq'; 
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 import { streamText  } from 'ai';
@@ -34,7 +34,6 @@ export async function generateRecipe(prompt: string = 'Generate a simple pasta r
   }
 
   
-
  
 // Reference: https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text
 /**
@@ -67,29 +66,6 @@ export async function handleChat(userMessage: string) {
   return result.toTextStreamResponse();
 }
 
-
-// // Next.js automatically loads this securely on the server
-// const customGroqProvider2 = createGroq({
-//   apiKey: process.env.GROQ_API_KEY, 
-// });
-
-// export async function POST(req: Request) {
-//   try {
-//     // The useChat hook automatically sends an array of 'messages'
-//     const { messages } = await req.json();
-
-//     const result = await streamText({
-//       model: customGroqProvider2('llama-3.1-8b-instant'),
-//       system: 'You are a helpful Chef named ChefBot. You can chat normally or provide cooking advice in short and organized way.',
-//       messages: messages, // Pass the whole history so the bot remembers context
-//     });
-
-//     return result.toTextStreamResponse();
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   } catch (error: any) {
-//     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-//   }
-// }
 
 
 /**
