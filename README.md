@@ -3,8 +3,8 @@
 Cooked App is a React + TypeScript recipe explorer built with Vite, Material UI, React Router, React Query, and Supabase. It uses TheMealDB as the recipe data source and Supabase for Authentication and storing user favourites.
 
 Live demo: https://cooked-kgtd.vercel.app
-
 Source repository: https://github.com/MarciaSatie/cooked
+yutube video: https://youtu.be/RqRjzBUHecc
 
 ## Overview
 
@@ -36,7 +36,7 @@ The application lets signed-in users browse recipes by:
 
 ## Data Sources
 
-- TheMealDB API for recipe, category, ingredient, and random recipe data
+- [TheMealDB](https://www.themealdb.com/api.php) API for recipe, category, ingredient, and random recipe data
 - Supabase Auth for user accounts
 - Supabase database tables for profiles and favourite recipes
 
